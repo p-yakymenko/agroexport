@@ -17,7 +17,8 @@ class CreateSellersToProductCategoriesTable extends Migration
             $table->integer('seller_id')->unsigned();
             $table->integer('product_category_id')->unsigned();
             $table->foreign('seller_id')->references('id')->on('sellers');
-            $table->foreign('product_category_id')->references('id')->on('product_categories');
+            $table->foreign('product_category_id')->references('id')->on('product_categories');           
+            $table->timestamps();
         });
     }
 

@@ -23,6 +23,7 @@ class CreateSellersTable extends Migration
             $table->string('site')->nullable();
             $table->string('activity_type')->nullable();
             $table->string('contact_person')->nullable();
+            $table->timestamps();
         });
     }
 
