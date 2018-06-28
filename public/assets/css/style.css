@@ -599,5 +599,7 @@ header .form-inline {
 .message-show + .dropdown-menu,
 .language-show + .dropdown-menu {
   display: block; }
-
+.card{
+  overflow: auto;
+}
 /*# sourceMappingURL=style.css.map */

@@ -47,5 +47,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function() {
 	Route::get('/product-categories-add',['uses'=>'Admin\ProductCategoriesController@showAdd','as'=>'productShow']);
 
 	Route::post('/product-categories-add',['uses'=>'Admin\ProductCategoriesController@add','as'=>'productAdd']);
+
+	Route::get('/import-excel', 'Admin\ImportExcelController@index')->name('importFile');
+
+	Route::post('/import-excel', 'Admin\ImportExcelController@admin_import_post')->name('uploadFile');
+
+	Route::get('/seller/{id}', 'Admin\SellersController@showSeller');
 });
 

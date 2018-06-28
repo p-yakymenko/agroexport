@@ -15,12 +15,12 @@
 									<th>Название</th>
 									<th>Адрес</th>
 									<th>Страна</th>
-									<th>Телефон</th>
+									<!-- <th>Телефон</th>
 									<th>E-mail</th>
-									<th>Сайт</th>
+									<th>Сайт</th> -->
 									<th>Тип деятельности</th>
 									<th>Продукция</th>
-									<th>Контактное лицо</th>
+									<!-- <th>Контактное лицо</th> -->
 									<th>Изменить</th>
 								</tr>
 							</thead>
@@ -30,19 +30,19 @@
 								@foreach($sellers as $k=>$seller)
 								
 								<tr>
-									<td>{{$seller->name}}</td>
+									<td><a title="Подробнее" href="{{ url('/admin/seller/'.$seller->id) }}">{{$seller->name}}</a></td>
 									<td>{{$seller->address}}</td>
 									<td>{{$seller->country}}</td>
-									<td>{{$seller->phone}}</td>
-									<td>{{$seller->email}}</td>
-									<td>{{$seller->site}}</td>
+                                    <!-- <td>{{$seller->phone}}</td>
+                                    <td>{{$seller->email}}</td>
+                                    <td>{{$seller->site}}</td> -->
 									<td>{{$seller->activity_type}}</td>
 									<td>
 										@for($i=0; $i < count($seller->arrayCatNames); $i++)
 										<p>{{$seller->arrayCatNames[$i]}}</p>
 										@endfor
 									</td>
-									<td>{{$seller->contact_person}}</td>
+									<!-- <td>{{$seller->contact_person}}</td> -->
 									<td>
 										<a class="btn btn-primary" href="{{ url('/admin/sellers/'.$seller->id) }}">Изменить</a>
 										{!! Form::open(['url'=>route('deleteSeller'),'onsubmit' => 'return ConfirmDelete()', 'class'=>'form-horizontal','method' => 'POST']) !!}

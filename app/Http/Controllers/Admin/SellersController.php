@@ -165,4 +165,32 @@ class SellersController extends Controller
         return redirect()->route('adminSellers');
     }
 
+
+    public function showSeller($id)
+    {
+        $products = ProductCategories::all();
+        $objCategories = DB::select('select * from sellers_to_product_categories');
+        $seller = Sellers::find($id);
+        $title = 'Подробная информация об экспортере '.$seller->name;
+        
+        foreach ($objCategories as $category) {
+            if ($category->seller_id == $seller->id) {
+                $arrayCategories[] = $category->product_category_id;
+            }
+        }
+        $seller->arrayCategories = $arrayCategories;
+        
+        for ($i=0; $i < count($seller->arrayCategories); $i++) { 
+            foreach ($products as $product) {
+                if ($seller->arrayCategories[$i] == $product->id) {
+                    $arrayCatNames[$i] = $product->name;
+                }
+            }
+        }               
+        $seller->arrayCatNames = $arrayCatNames;
+
+        return view('admin.seller', ['title' => $title,'seller' => $seller,'products' => $products ]);
+    }
+
+
 }
