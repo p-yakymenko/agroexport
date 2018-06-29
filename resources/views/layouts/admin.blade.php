@@ -39,8 +39,8 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand" href="./"><img src="../images/logo.png" alt="Logo"></a>
-                <a class="navbar-brand hidden" href="./"><img src="../images/logo2.png" alt="Logo"></a>
+                <a class="navbar-brand" href="/">Агроэкспорт</a>
+                <a class="navbar-brand hidden" href="/">АЭ</a>
             </div>
 
             <div id="main-menu" class="main-menu collapse navbar-collapse">
@@ -89,7 +89,7 @@
 
             <div class="header-menu">
 
-<div class="col-sm-7">
+<div class="col-sm-10">
 <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
 <!-- <div class="header-left">
     <button class="search-trigger"><i class="fa fa-search"></i></button>
@@ -168,67 +168,81 @@
 </div> -->
 </div>
 
-                <div class="col-sm-5">
-                    <div class="user-area dropdown float-right">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="user-avatar rounded-circle" src="../images/admin.jpg" alt="User Avatar">
-                        </a>
+<div class="col-sm-2">
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Authentication Links -->
+                        @guest
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            </li>
+                        @else
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                </a>
 
-                        <div class="user-menu dropdown-menu">
-                                <a class="nav-link" href="#"><i class="fa fa- user"></i>My Profile</a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
 
-                                <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span class="count">13</span></a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
+                        @endguest
+                    </ul>
+</div>
 
-                                <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a>
 
-                                <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>
-                        </div>
-                    </div>
+<!--                 <div class="col-sm-5">
+    <div class="user-area dropdown float-right">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                    <div class="language-select dropdown" id="language-select">
-                        <a class="dropdown-toggle" href="#" data-toggle="dropdown"  id="language" aria-haspopup="true" aria-expanded="true">
-                            <i class="flag-icon flag-icon-us"></i>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="language" >
-                            <div class="dropdown-item">
-                                <span class="flag-icon flag-icon-fr"></span>
-                            </div>
-                            <div class="dropdown-item">
-                                <i class="flag-icon flag-icon-es"></i>
-                            </div>
-                            <div class="dropdown-item">
-                                <i class="flag-icon flag-icon-us"></i>
-                            </div>
-                            <div class="dropdown-item">
-                                <i class="flag-icon flag-icon-it"></i>
-                            </div>
-                        </div>
-                    </div>
+        </a>
 
-                </div>
+        <div class="user-menu dropdown-menu">
+                <a class="nav-link" href="#"><i class="fa fa- user"></i>My Profile</a>
+
+                <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span class="count">13</span></a>
+
+                <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a>
+
+                <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>
+        </div>
+    </div>
+
+    <div class="language-select dropdown" id="language-select">
+        <a class="dropdown-toggle" href="#" data-toggle="dropdown"  id="language" aria-haspopup="true" aria-expanded="true">
+            <i class="flag-icon flag-icon-us"></i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="language" >
+            <div class="dropdown-item">
+                <span class="flag-icon flag-icon-fr"></span>
+            </div>
+            <div class="dropdown-item">
+                <i class="flag-icon flag-icon-es"></i>
+            </div>
+            <div class="dropdown-item">
+                <i class="flag-icon flag-icon-us"></i>
+            </div>
+            <div class="dropdown-item">
+                <i class="flag-icon flag-icon-it"></i>
+            </div>
+        </div>
+    </div>
+
+</div> -->
             </div>
 
         </header><!-- /header -->
         <!-- Header-->
-
-        <div class="breadcrumbs">
-            <div class="col-sm-4">
-                <div class="page-header float-left">
-                    <div class="page-title">
-                        <h1>Dashboard</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-8">
-                <div class="page-header float-right">
-                    <div class="page-title">
-                        <ol class="breadcrumb text-right">
-                            <li class="active">Dashboard</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 @yield('content')
 

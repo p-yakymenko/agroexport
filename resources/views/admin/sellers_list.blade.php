@@ -1,3 +1,24 @@
+<div class="breadcrumbs">
+	<div class="col-sm-4">
+		<div class="page-header float-left">
+			<div class="page-title">
+				<h1>Панель управления</h1>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-8">
+		<div class="page-header float-right">
+			<div class="page-title">
+				<ol class="breadcrumb text-right">
+					<li><a href="{{route('adminIndex')}}">Панель управления</a></li>
+					<li class="active">{{ $title }}</li>
+				</ol>                        
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <div class="content mt-3">
 	<div class="animated fadeIn">
 		<div class="row">
@@ -36,44 +57,44 @@
                                     <!-- <td>{{$seller->phone}}</td>
                                     <td>{{$seller->email}}</td>
                                     <td>{{$seller->site}}</td> -->
-									<td>{{$seller->activity_type}}</td>
-									<td>
-										@for($i=0; $i < count($seller->arrayCatNames); $i++)
-										<p>{{$seller->arrayCatNames[$i]}}</p>
-										@endfor
-									</td>
-									<!-- <td>{{$seller->contact_person}}</td> -->
-									<td>
-										<a class="btn btn-primary" href="{{ url('/admin/sellers/'.$seller->id) }}">Изменить</a>
-										{!! Form::open(['url'=>route('deleteSeller'),'onsubmit' => 'return ConfirmDelete()', 'class'=>'form-horizontal','method' => 'POST']) !!}
-										{!! Form::hidden('action',$seller->id) !!}
-										{!! Form::button('Удалить',['class'=>'btn btn-danger','type'=>'submit']) !!}
-										{!! Form::close() !!}
-									</td>
-								</tr>
+                                    <td>{{$seller->activity_type}}</td>
+                                    <td>
+                                    	@for($i=0; $i < count($seller->arrayCatNames); $i++)
+                                    	<p>{{$seller->arrayCatNames[$i]}}</p>
+                                    	@endfor
+                                    </td>
+                                    <!-- <td>{{$seller->contact_person}}</td> -->
+                                    <td>
+                                    	<a class="btn btn-primary" href="{{ url('/admin/sellers/'.$seller->id) }}">Изменить</a>
+                                    	{!! Form::open(['url'=>route('deleteSeller'),'onsubmit' => 'return ConfirmDelete()', 'class'=>'form-horizontal','method' => 'POST']) !!}
+                                    	{!! Form::hidden('action',$seller->id) !!}
+                                    	{!! Form::button('Удалить',['class'=>'btn btn-danger','type'=>'submit']) !!}
+                                    	{!! Form::close() !!}
+                                    </td>
+                                </tr>
 
-								@endforeach
-								@endif
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
 
-		</div>
-	</div><!-- .animated -->
+        </div>
+    </div><!-- .animated -->
 </div><!-- .content -->
 
 <script>
 
-  function ConfirmDelete()
-  {
-  var x = confirm("Вы уверены, что хотите удалить?");
-  if (x)
-    return true;
-  else
-    return false;
-  }
+	function ConfirmDelete()
+	{
+		var x = confirm("Вы уверены, что хотите удалить?");
+		if (x)
+			return true;
+		else
+			return false;
+	}
 
 </script>
