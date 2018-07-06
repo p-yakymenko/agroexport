@@ -16,10 +16,10 @@ class CreateSellersTable extends Migration
         Schema::create('sellers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('address');
-            $table->string('country');
-            $table->string('phone');
-            $table->string('email');
+            $table->string('address')->nullable();
+            $table->string('country')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->string('site')->nullable();
             $table->string('activity_type')->nullable();
             $table->string('contact_person')->nullable();

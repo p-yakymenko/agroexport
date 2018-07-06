@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Sellers;
 use App\ProductCategories;
+use Transliterate;
 use DB;
 
 class IndexController extends Controller
@@ -51,6 +52,6 @@ class IndexController extends Controller
             $seller->arrayCatNames = $arrayCatNames;
         }
 
-        return view('admin.index', ['title' => $title,'sellers' => $sellers ]);
+        return view('admin.index', ['title' => $title,'sellers' => $sellers, 'products' =>  $products]);
     }
 }

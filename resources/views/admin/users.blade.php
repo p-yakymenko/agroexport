@@ -1,3 +1,5 @@
+@extends('layouts.admin')
+@section('content')
 <div class="breadcrumbs">
 	<div class="col-sm-4">
 		<div class="page-header float-left">
@@ -17,55 +19,50 @@
 		</div>
 	</div>
 </div>
-
-
 <div class="content mt-3">
 	<div class="animated fadeIn">
 		<div class="row">
-
 			<div class="col-md-12">
 				<div class="card">
 					<div class="card-header">
 						<strong class="card-title">{{ $title }}</strong>
 					</div>
-					<a class="btn btn-primary" href="{{ route('showAdd') }}">Добавить</a>
+					@can('update-user')
+					<a class="btn btn-primary" href="{{ route('showUser') }}">Добавить</a>
+					@endcan 
 					<div class="card-body">
 						<table id="bootstrap-data-table" class="table table-striped table-bordered">
 							<thead>
 								<tr>
-									<th>Название, Адрес, Страна</th>
-									<th>Телефон</th>
+									<th>Имя</th>
 									<th>E-mail</th>
-									<th>Сайт</th>
-									<th>Продукция</th>
+									<th>Роль</th>
+									@can('update-user')
 									<th>Изменить</th>
+									@endcan 
 								</tr>
 							</thead>
 							<tbody>
 								
-								@if(isset($sellers))
-								@foreach($sellers as $k=>$seller)
+								@if(isset($users))
+								@foreach($users as $user)
 								
 								<tr>
-									<td><a title="Подробнее" href="{{ url('/admin/seller/'.$seller->id) }}" style="color: blue;">{{$seller->name}}</a>
-										<p>{{$seller->address}}</p>
-										<p>{{$seller->country}}</p>
-									</td>
-									<td>{{$seller->phone}}</td>
-                                    <td>{{$seller->email}}</td>
-                                    <td>{{$seller->site}}</td> 
+									<td>{{$user->name}}</td>
+									<td>{{$user->email}}</td>
+									<td>{{$user->role}}</td>
+                                    
+                                    @can('update-user')
                                     <td>
-                                    	@for($i=0; $i < count($seller->arrayCatNames); $i++)
-                                    	<p>{{$seller->arrayCatNames[$i]}}</p>
-                                    	@endfor
-                                    </td>
-                                    <td>
-                                    	<a class="btn btn-primary" href="{{ url('/admin/sellers/'.$seller->id) }}">Изменить</a>
-                                    	{!! Form::open(['url'=>route('deleteSeller'),'onsubmit' => 'return ConfirmDelete()', 'class'=>'form-horizontal','method' => 'POST']) !!}
-                                    	{!! Form::hidden('action',$seller->id) !!}
+                                    	<a class="btn btn-primary" href="{{ url('/admin/users/'.$user->id) }}">Изменить</a>
+                                    	{!! Form::open(['url'=>route('deleteUser'),'onsubmit' => 'return ConfirmDelete()', 'class'=>'form-horizontal','method' => 'POST']) !!}
+                                    	{!! Form::hidden('email',$user->email) !!}
+                                    	{!! Form::hidden('action',$user->id) !!}
                                     	{!! Form::button('Удалить',['class'=>'btn btn-danger','type'=>'submit']) !!}
                                     	{!! Form::close() !!}
                                     </td>
+                                    @endcan 
+                                
                                 </tr>
 
                                 @endforeach
@@ -93,3 +90,5 @@
 	}
 
 </script>
+
+@endsection

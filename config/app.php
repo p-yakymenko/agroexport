@@ -146,7 +146,9 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,        
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Dlnsk\HierarchicalRBAC\HRBACServiceProvider::class,
+        ElForastero\Transliterate\TransliterationServiceProvider::class,        
 
         /*
          * Package Service Providers...
@@ -213,6 +215,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Transliterate' => ElForastero\Transliterate\TransliterationFacade::class,
 
     ],
 

@@ -24,7 +24,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function() {
 	
 	Route::get('/',['uses' => 'Admin\IndexController@index','as' => 'adminIndex']);
 	
-	Route::get('/sellers',['uses' => 'Admin\SellersController@index','as' => 'adminSellers']);
+	Route::get('/sellers/{product}',['uses' => 'Admin\SellersController@index','as' => 'adminSellers']);
 
 	Route::post('/sellers',['uses' => 'Admin\SellersController@destroy','as' => 'deleteSeller']);
 
@@ -53,5 +53,17 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function() {
 	Route::post('/import-excel', 'Admin\ImportExcelController@admin_import_post')->name('uploadFile');
 
 	Route::get('/seller/{id}', 'Admin\SellersController@showSeller');
+
+	Route::get('/users',['uses' => 'Admin\RolesController@index','as' => 'adminUsers']);
+
+	Route::get('/users/{id}', 'Admin\RolesController@show');
+
+	Route::post('/users/{id}',['uses'=>'Admin\RolesController@update','as'=>'userUpdate']);
+
+	Route::post('/users',['uses' => 'Admin\RolesController@destroy','as' => 'deleteUser']);
+
+	Route::get('/user-add',['uses'=>'Admin\RolesController@showAdd','as'=>'showUser']);
+
+	Route::post('/user-add',['uses'=>'Admin\RolesController@add','as'=>'userAdd']);
 });
 

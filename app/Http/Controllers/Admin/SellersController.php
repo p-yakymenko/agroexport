@@ -6,17 +6,26 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Sellers;
 use App\ProductCategories;
+use Transliterate;
 use DB;
 
 class SellersController extends Controller
 {
 
-    public function index()
+    public function index($product)
     {
-        $title = 'Список экспортёров';
-        $sellers = Sellers::all();
         $products = ProductCategories::all();
+        
+        foreach ($products as $value) {
+            if (Transliterate::make($value->name, ['type' => 'url', 'lowercase' => true]) == $product) {
+                $our_product = $value->name;
+            }
+        }
+        
+        $title = 'Список экспортёров '.$our_product;
+        $sellers = Sellers::all();
         $objCategories = DB::select('select * from sellers_to_product_categories');
+        //находим продукты(id) связанные с продавцом
         foreach ($sellers as $seller) {
             if ($seller->id) {
                 $arrayCategories = array();
@@ -28,6 +37,7 @@ class SellersController extends Controller
             }
             $seller->arrayCategories = $arrayCategories;
         }
+        //переводим id продуктов в названия
         foreach ($sellers as $seller) {
             if ($seller->arrayCategories) {
                 $arrayCatNames = array();
@@ -41,8 +51,15 @@ class SellersController extends Controller
             }
             $seller->arrayCatNames = $arrayCatNames;
         }
+        //отфильтровуем продавцов по нужному продукту
+        $new_sellers = array();
+        foreach ($sellers as $seller) {
+            if (in_array($our_product, $seller->arrayCatNames)) {
+                $new_sellers[] =  $seller;
+            }
+        }
 
-        return view('admin.sellers', ['title' => $title,'sellers' => $sellers ]);
+        return view('admin.sellers', ['title' => $title,'sellers' => $new_sellers, 'products' =>  $products ]);
     }
 
     

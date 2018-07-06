@@ -28,9 +28,9 @@
 
 </head>
 <body>
+    @can('update-post')
 
-
-        <!-- Left Panel -->
+    <!-- Left Panel -->
 
     <aside id="left-panel" class="left-panel">
         <nav class="navbar navbar-expand-sm navbar-default">
@@ -47,32 +47,30 @@
                 <ul class="nav navbar-nav">
                     <li class="active">
                         <a href="{{route('adminIndex')}}"> <i class="menu-icon fa fa-dashboard"></i>Панель управления </a>
+                    </li>                 
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Экспортёры </a>
+                        <ul class="sub-menu children dropdown-menu">
+
+                            @if(isset($products) && is_object($products))
+                            @foreach($products as $product)
+                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
+                            @endforeach
+                            @endif
+
+                        </ul>
                     </li>
-                    <li>
-                        <a href="{{route('adminSellers')}}"><i class="menu-icon fa fa-user-circle"></i> Экспортёры </a>
-                    </li>
+                    
+
                     <li>
                         <a href="{{route('adminCategories')}}"><i class="menu-icon fa fa-cubes"></i> Продукты </a>
                     </li>
                     <li>
                         <a href="{{route('importFile')}}"><i class="menu-icon fa fa-etsy"></i> Импорт из Excel </a>
-                    </li>
-                    <!-- <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Components</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="fa fa-puzzle-piece"></i><a href="ui-buttons.html">Buttons</a></li>
-                            <li><i class="fa fa-id-badge"></i><a href="ui-badges.html">Badges</a></li>
-                            <li><i class="fa fa-bars"></i><a href="ui-tabs.html">Tabs</a></li>
-                            <li><i class="fa fa-share-square-o"></i><a href="ui-social-buttons.html">Social Buttons</a></li>
-                            <li><i class="fa fa-id-card-o"></i><a href="ui-cards.html">Cards</a></li>
-                            <li><i class="fa fa-exclamation-triangle"></i><a href="ui-alerts.html">Alerts</a></li>
-                            <li><i class="fa fa-spinner"></i><a href="ui-progressbar.html">Progress Bars</a></li>
-                            <li><i class="fa fa-fire"></i><a href="ui-modals.html">Modals</a></li>
-                            <li><i class="fa fa-book"></i><a href="ui-switches.html">Switches</a></li>
-                            <li><i class="fa fa-th"></i><a href="ui-grids.html">Grids</a></li>
-                            <li><i class="fa fa-file-word-o"></i><a href="ui-typgraphy.html">Typography</a></li>
-                        </ul>
-                    </li> -->
+                    </li>                   
+                    <li>
+                        <a href="{{route('adminUsers')}}"><i class="menu-icon fa fa-address-card "></i> Пользователи </a>
+                    </li>                   
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>
@@ -89,199 +87,83 @@
 
             <div class="header-menu">
 
-<div class="col-sm-10">
-<a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
-<!-- <div class="header-left">
-    <button class="search-trigger"><i class="fa fa-search"></i></button>
-    <div class="form-inline">
-        <form class="search-form">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search ..." aria-label="Search">
-            <button class="search-close" type="submit"><i class="fa fa-close"></i></button>
-        </form>
-    </div>
+                <div class="col-sm-10">
+                    <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-tasks"></i></a>
+                </div>
 
-    <div class="dropdown for-notification">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fa fa-bell"></i>
-        <span class="count bg-danger">5</span>
-      </button>
-      <div class="dropdown-menu" aria-labelledby="notification">
-        <p class="red">You have 3 Notification</p>
-        <a class="dropdown-item media bg-flat-color-1" href="#">
-            <i class="fa fa-check"></i>
-            <p>Server #1 overloaded.</p>
-        </a>
-        <a class="dropdown-item media bg-flat-color-4" href="#">
-            <i class="fa fa-info"></i>
-            <p>Server #2 overloaded.</p>
-        </a>
-        <a class="dropdown-item media bg-flat-color-5" href="#">
-            <i class="fa fa-warning"></i>
-            <p>Server #3 overloaded.</p>
-        </a>
-      </div>
-    </div>
-
-    <div class="dropdown for-message">
-      <button class="btn btn-secondary dropdown-toggle" type="button"
-            id="message"
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="ti-email"></i>
-        <span class="count bg-primary">9</span>
-      </button>
-      <div class="dropdown-menu" aria-labelledby="message">
-        <p class="red">You have 4 Mails</p>
-        <a class="dropdown-item media bg-flat-color-1" href="#">
-            <span class="photo media-left"><img alt="avatar" src="../images/avatar/1.jpg"></span>
-            <span class="message media-body">
-                <span class="name float-left">Jonathan Smith</span>
-                <span class="time float-right">Just now</span>
-                    <p>Hello, this is an example msg</p>
-            </span>
-        </a>
-        <a class="dropdown-item media bg-flat-color-4" href="#">
-            <span class="photo media-left"><img alt="avatar" src="../images/avatar/2.jpg"></span>
-            <span class="message media-body">
-                <span class="name float-left">Jack Sanders</span>
-                <span class="time float-right">5 minutes ago</span>
-                    <p>Lorem ipsum dolor sit amet, consectetur</p>
-            </span>
-        </a>
-        <a class="dropdown-item media bg-flat-color-5" href="#">
-            <span class="photo media-left"><img alt="avatar" src="../images/avatar/3.jpg"></span>
-            <span class="message media-body">
-                <span class="name float-left">Cheryl Wheeler</span>
-                <span class="time float-right">10 minutes ago</span>
-                    <p>Hello, this is an example msg</p>
-            </span>
-        </a>
-        <a class="dropdown-item media bg-flat-color-3" href="#">
-            <span class="photo media-left"><img alt="avatar" src="../images/avatar/4.jpg"></span>
-            <span class="message media-body">
-                <span class="name float-left">Rachel Santos</span>
-                <span class="time float-right">15 minutes ago</span>
-                    <p>Lorem ipsum dolor sit amet, consectetur</p>
-            </span>
-        </a>
-      </div>
-    </div>
-</div> -->
-</div>
-
-<div class="col-sm-2">
+                <div class="col-sm-2">
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Войти') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('Зарегистрироваться') }}</a>
+                        </li>
                         @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }} <span class="caret"></span>
+                            </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                {{ __('Выйти') }}
+                            </a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-</div>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                    @endguest
+                </ul>
+            </div>
 
-
-<!--                 <div class="col-sm-5">
-    <div class="user-area dropdown float-right">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-
-        </a>
-
-        <div class="user-menu dropdown-menu">
-                <a class="nav-link" href="#"><i class="fa fa- user"></i>My Profile</a>
-
-                <a class="nav-link" href="#"><i class="fa fa- user"></i>Notifications <span class="count">13</span></a>
-
-                <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a>
-
-                <a class="nav-link" href="#"><i class="fa fa-power -off"></i>Logout</a>
         </div>
-    </div>
 
-    <div class="language-select dropdown" id="language-select">
-        <a class="dropdown-toggle" href="#" data-toggle="dropdown"  id="language" aria-haspopup="true" aria-expanded="true">
-            <i class="flag-icon flag-icon-us"></i>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="language" >
-            <div class="dropdown-item">
-                <span class="flag-icon flag-icon-fr"></span>
-            </div>
-            <div class="dropdown-item">
-                <i class="flag-icon flag-icon-es"></i>
-            </div>
-            <div class="dropdown-item">
-                <i class="flag-icon flag-icon-us"></i>
-            </div>
-            <div class="dropdown-item">
-                <i class="flag-icon flag-icon-it"></i>
-            </div>
-        </div>
-    </div>
+    </header><!-- /header -->
+    <!-- Header-->
 
-</div> -->
-            </div>
-
-        </header><!-- /header -->
-        <!-- Header-->
-
-@yield('content')
-
-    </div><!-- /#right-panel -->
-
-    <!-- Right Panel -->
-
-    <script src="{{ asset('assets/js/vendor/jquery-2.1.4.min.js') }}"></script>
-    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins.js') }}"></script>
-    <script src="{{ asset('assets/js/main.js') }}"></script>
+    @yield('content')
 
 
-    <script src="{{ asset('assets/js/lib/chart-js/Chart.bundle.js') }}"></script>
-    <script src="{{ asset('assets/js/dashboard.js') }}"></script>
-    <script src="{{ asset('assets/js/widgets.js') }}"></script>
-    <script src="{{ asset('assets/js/lib/vector-map/jquery.vmap.js') }}"></script>
-    <script src="{{ asset('assets/js/lib/vector-map/jquery.vmap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/lib/vector-map/jquery.vmap.sampledata.js') }}"></script>
-    <script src="{{ asset('assets/js/lib/vector-map/country/jquery.vmap.world.js') }}"></script>
-    <script>
-        ( function ( $ ) {
-            "use strict";
+</div><!-- /#right-panel -->
 
-            jQuery( '#vmap' ).vectorMap( {
-                map: 'world_en',
-                backgroundColor: null,
-                color: '#ffffff',
-                hoverOpacity: 0.7,
-                selectedColor: '#1de9b6',
-                enableZoom: true,
-                showTooltip: true,
-                values: sample_data,
-                scaleColors: [ '#1de9b6', '#03a9f5' ],
-                normalizeFunction: 'polynomial'
-            } );
-        } )( jQuery );
-    </script>
+<!-- Right Panel -->
 
+<script src="{{ asset('assets/js/vendor/jquery-2.1.4.min.js') }}"></script>
+<script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js') }}"></script>
+<script src="{{ asset('assets/js/plugins.js') }}"></script>
+<script src="{{ asset('assets/js/main.js') }}"></script>
+
+
+<script src="{{ asset('assets/js/lib/data-table/datatables.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/buttons.bootstrap.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/jszip.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/pdfmake.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/vfs_fonts.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/buttons.print.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/buttons.colVis.min.js') }}"></script>
+<script src="{{ asset('assets/js/lib/data-table/datatables-init.js') }}"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+      $('#bootstrap-data-table-export').DataTable();
+    } );
+</script>
+
+
+@else
+<h1>Вы не можете просматривать эту страницу!</h1>
+@endcan
 </body>
 </html>
 

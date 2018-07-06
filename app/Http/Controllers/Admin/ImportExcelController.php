@@ -14,18 +14,36 @@ class ImportExcelController extends Controller
 	
 	public function index() {
 		
+		$products = ProductCategories::all();
 		$title = 'Импорт из Excel';
 		
-		return view('admin.import_excel', ['title' => $title]);
+		return view('admin.import_excel', ['title' => $title, 'products' =>  $products]);
 		
 	}
 
 
 	public function admin_import_post(Request $request){
+
+		/*DB::table('sellers_to_product_categories')
+        ->where('product_category_id', '>',9)
+        ->delete();
+        
+        DB::table('sellers')
+        ->where('id', '>', 95)
+        ->delete();
+
+        die();*/
 		
 		$sellers = Sellers::all();
 		$file = $request->file('import_file');
-		$name_file = basename($file->getClientOriginalName(), '.'.$file->getClientOriginalExtension());
+		if (!empty($file)) {
+			$name_file = basename($file->getClientOriginalName(), '.'.$file->getClientOriginalExtension());
+		}
+		else{
+			echo "<h1>Ошибка! Файл не выбран!</h1>";
+			die();
+		}
+		
 		$products = ProductCategories::all();
 		$result = false;
 
@@ -50,6 +68,10 @@ class ImportExcelController extends Controller
 
 		$excel = App::make('excel');
 		$uploaded_entries = $excel->load($file)->get();
+        
+        /*print_r($uploaded_entries);
+		die();*/
+		
 		$fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person'];
 		//получаем список полей файла, чтобы не зависело от названия, а только от последовательности и наличия
 		foreach ($uploaded_entries as $uploaded_entry) {
@@ -78,6 +100,7 @@ class ImportExcelController extends Controller
 			}		
 		}       
 
+        $message = '';
         //заполняем таблицу sellers и sellers_to_product_categories
 		foreach ($value_arr as $value) {
 			if (!empty($value[$key_array[0]])) {
@@ -89,7 +112,9 @@ class ImportExcelController extends Controller
 							$new_seller[$fields[$i]] = $value[$key_array[$i]];
 						} 					
 					}
-					$new_seller->save();
+					if ($new_seller->save()) {
+						$message = 'Файл успешно импортирован!';
+					}
 					$id_seller = DB::getPdo()->lastInsertId();
 				}
 				else{
@@ -117,7 +142,10 @@ class ImportExcelController extends Controller
 			}
 		}
 
-		return redirect()->route('adminSellers');
+		$products = ProductCategories::all();
+		$title = 'Импорт из Excel';
+
+		return view('admin.import_excel', ['title' => $title, 'products' =>  $products, 'message' =>  $message]);
 	}
 
 }
