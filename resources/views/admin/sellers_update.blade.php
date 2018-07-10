@@ -98,6 +98,10 @@
 						{!! Form::button('Сохранить',['class'=>'btn btn-primary','type'=>'submit']) !!}
 						{!! Form::close() !!}
 						@endif
+
+						@if(isset($message))
+						<h3>{{$message}}</h3>
+						@endif
 					</div>
 				</div>
 			</div>

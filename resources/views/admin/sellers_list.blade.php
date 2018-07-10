@@ -60,7 +60,7 @@
                                     	@endfor
                                     </td>
                                     <td>
-                                    	<a class="btn btn-primary" href="{{ url('/admin/sellers/'.$seller->id) }}">Изменить</a>
+                                    	<a class="btn btn-primary" href="{{ url('/admin/seller-update/'.$seller->id) }}">Изменить</a>
                                     	{!! Form::open(['url'=>route('deleteSeller'),'onsubmit' => 'return ConfirmDelete()', 'class'=>'form-horizontal','method' => 'POST']) !!}
                                     	{!! Form::hidden('action',$seller->id) !!}
                                     	{!! Form::button('Удалить',['class'=>'btn btn-danger','type'=>'submit']) !!}

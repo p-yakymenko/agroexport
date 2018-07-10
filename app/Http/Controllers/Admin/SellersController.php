@@ -12,7 +12,7 @@ use DB;
 class SellersController extends Controller
 {
 
-    public function index($product)
+    public function index($product = null)
     {
         $products = ProductCategories::all();
         
@@ -21,7 +21,7 @@ class SellersController extends Controller
                 $our_product = $value->name;
             }
         }
-        
+                
         $title = 'Список экспортёров '.$our_product;
         $sellers = Sellers::all();
         $objCategories = DB::select('select * from sellers_to_product_categories');
@@ -89,8 +89,10 @@ class SellersController extends Controller
                 }
             }
         }
-
-        $new_seller->save();
+        
+        if ($new_seller->save()) {
+            $message = 'Запись успешно сохранена!';
+        }
         $id = DB::getPdo()->lastInsertId();
 
         for ($i=0; $i < count($arrayCategories); $i++) { 
@@ -98,7 +100,8 @@ class SellersController extends Controller
             ->insert(['seller_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
         }
 
-        return redirect()->route('adminSellers');
+        $title = 'Добавление экспортера';
+        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'message' =>  $message ]);
     }
 
     
@@ -163,8 +166,15 @@ class SellersController extends Controller
             ->insert(['seller_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
         }
 
-        $seller_to_be_updated->save();
-        return redirect()->route('adminSellers');
+        
+        if ($seller_to_be_updated->save()) {
+            $message = 'Запись успешно сохранена!';
+        }
+
+        $seller_to_be_updated->arrayCatNames = $arrayCatNames;
+        
+        $title = 'Изменение экспортера '.$seller_to_be_updated->name;
+        return view('admin.sellers_update', ['title' => $title,'seller' => $seller_to_be_updated,'products' => $products, 'message' =>  $message]);
     }
 
 
@@ -179,7 +189,7 @@ class SellersController extends Controller
         ->where('id', '=', $id)
         ->delete();
 
-        return redirect()->route('adminSellers');
+        return redirect()->route('adminIndex');
     }
 
 
