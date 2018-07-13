@@ -24,17 +24,19 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function() {
 	
 	Route::get('/',['uses' => 'Admin\IndexController@index','as' => 'adminIndex']);
 	
-	Route::get('/sellers/{product?}',['uses' => 'Admin\SellersController@index','as' => 'adminSellers']);
+	Route::get('/sellers/{object}/{product?}',['uses' => 'Admin\SellersController@index','as' => 'adminSellers']);
 
-	Route::post('/sellers',['uses' => 'Admin\SellersController@destroy','as' => 'deleteSeller']);
+	Route::post('/sellers/{object}',['uses' => 'Admin\SellersController@destroy','as' => 'deleteSeller']);
 
-	Route::get('/seller-update/{id}', 'Admin\SellersController@show');
+	Route::get('/seller-update/{object}/{id}', 'Admin\SellersController@show');
 
-	Route::get('/seller-add',['uses'=>'Admin\SellersController@showAdd','as'=>'showAdd']);
+	Route::get('/seller-add/{object}',['uses'=>'Admin\SellersController@showAdd','as'=>'showAdd']);
 
-	Route::post('/seller-add',['uses'=>'Admin\SellersController@add','as'=>'sellersAdd']);
+	Route::post('/seller-add/{object}',['uses'=>'Admin\SellersController@add','as'=>'sellersAdd']);
 
-	Route::post('/seller-update/{id}',['uses'=>'Admin\SellersController@update','as'=>'sellersUpdate']);
+	Route::post('/seller-update/{object}/{id}',['uses'=>'Admin\SellersController@update','as'=>'sellersUpdate']);
+
+	Route::get('/seller/{object}/{id}', 'Admin\SellersController@showSeller');
 
 	Route::get('/product-categories',['uses' => 'Admin\ProductCategoriesController@index','as' => 'adminCategories']);
 
@@ -48,11 +50,9 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function() {
 
 	Route::post('/product-categories-add',['uses'=>'Admin\ProductCategoriesController@add','as'=>'productAdd']);
 
-	Route::get('/import-excel', 'Admin\ImportExcelController@index')->name('importFile');
+	Route::get('/import-excel/{object?}', 'Admin\ImportExcelController@index');
 
-	Route::post('/import-excel', 'Admin\ImportExcelController@admin_import_post')->name('uploadFile');
-
-	Route::get('/seller/{id}', 'Admin\SellersController@showSeller');
+	Route::post('/import-excel/{object}', ['uses' => 'Admin\ImportExcelController@importExcel','as'=>'uploadExcel']);	
 
 	Route::get('/users',['uses' => 'Admin\RolesController@index','as' => 'adminUsers']);
 

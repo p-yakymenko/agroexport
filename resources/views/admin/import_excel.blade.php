@@ -34,7 +34,7 @@
 					</div>
 					</div>					
 					<div class="card-body">
-						{!! Form::open(['url'=>route('uploadFile'), 'class'=>'form-horizontal','method' => 'POST','enctype' => 'multipart/form-data']) !!}
+						{!! Form::open(['url'=>route('uploadExcel',['object'=>$object]), 'class'=>'form-horizontal','method' => 'POST','enctype' => 'multipart/form-data']) !!}
 						{!! Form::file('import_file') !!}
 						{!! Form::button('Загрузить',['class'=>'btn btn-primary','type'=>'submit']) !!}
 						{!! Form::close() !!}

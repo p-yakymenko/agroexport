@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Sellers;
+use App\Http\Controllers\Admin\AdminController;
 use App\ProductCategories;
 use Transliterate;
 use DB;
 
-class SellersController extends Controller
+class SellersController extends AdminController
 {
-
-    public function index($product = null)
+  
+    public function index($object = null, $product = null)
     {
         $products = ProductCategories::all();
         
@@ -21,23 +20,49 @@ class SellersController extends Controller
                 $our_product = $value->name;
             }
         }
-                
+
         $title = 'Список экспортёров '.$our_product;
-        $sellers = Sellers::all();
-        $objCategories = DB::select('select * from sellers_to_product_categories');
+        $sellers = parent::objectsAll($object);
+        $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
         //находим продукты(id) связанные с продавцом
         foreach ($sellers as $seller) {
             if ($seller->id) {
                 $arrayCategories = array();
-                foreach ($objCategories as $category) {
-                    if ($category->seller_id == $seller->id) {
-                        $arrayCategories[] = $category->product_category_id;
+
+                if ($object == 'eksportyori') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->exporter_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
                     }
                 }
+                elseif ($object == 'importyori') {              
+                    foreach ($objCategories as $category) {
+                        if ($category->importer_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'fermeri') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->farm_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'proizvoditeli') {               
+                    foreach ($objCategories as $category) {
+                        if ($category->manufacturer_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+
             }
             $seller->arrayCategories = $arrayCategories;
         }
         //переводим id продуктов в названия
+        $arrayCatNames = array();
         foreach ($sellers as $seller) {
             if ($seller->arrayCategories) {
                 $arrayCatNames = array();
@@ -59,23 +84,23 @@ class SellersController extends Controller
             }
         }
 
-        return view('admin.sellers', ['title' => $title,'sellers' => $new_sellers, 'products' =>  $products ]);
+        return view('admin.sellers', ['title' => $title,'sellers' => $new_sellers, 'products' =>  $products, 'object' =>  $object]);
     }
 
     
-    public function showAdd()
+    public function showAdd($object)
     {
         $products = ProductCategories::all();
-        $title = 'Добавление экспортера';
-        return view('admin.sellers_add', ['title' => $title, 'products' => $products ]);
+        $title = 'Добавление '. parent::translitFunc($object);
+        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'object' =>  $object ]);
     }
 
 
-    public function add(Request $request)
+    public function add(Request $request, $object)
     {
         $products = ProductCategories::all();
         $arrayCatNames = $request->input('arrayCatNames');
-        $new_seller = new Sellers();
+        $new_seller = parent::objectsFunc($object);
         $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person'];
         
         foreach($fields as $field){
@@ -96,27 +121,51 @@ class SellersController extends Controller
         $id = DB::getPdo()->lastInsertId();
 
         for ($i=0; $i < count($arrayCategories); $i++) { 
-            DB::table('sellers_to_product_categories')
-            ->insert(['seller_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
+            DB::table(parent::tableName($object).'s_to_product_categories')
+            ->insert([parent::tableName($object).'_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
         }
 
-        $title = 'Добавление экспортера';
-        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'message' =>  $message ]);
+        $title = 'Добавление '. parent::translitFunc($object);
+        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'message' =>  $message, 'object' =>  $object ]);
     }
 
     
-    public function show($id)
+    public function show($object, $id)
     {
         $products = ProductCategories::all();
-        $objCategories = DB::select('select * from sellers_to_product_categories');
-        $seller = Sellers::find($id);
-        $title = 'Изменение экспортера '.$seller->name;
+        $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
+        $seller = parent::objectsOne($object, $id);
+        $title = 'Изменение '. parent::translitFunc($object).' '.$seller->name;
         
-        foreach ($objCategories as $category) {
-            if ($category->seller_id == $seller->id) {
-                $arrayCategories[] = $category->product_category_id;
+        if ($object == 'eksportyori') {             
+            foreach ($objCategories as $category) {
+                if ($category->exporter_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
             }
         }
+        elseif ($object == 'importyori') {              
+            foreach ($objCategories as $category) {
+                if ($category->importer_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+        elseif ($object == 'fermeri') {             
+            foreach ($objCategories as $category) {
+                if ($category->farm_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+        elseif ($object == 'proizvoditeli') {               
+            foreach ($objCategories as $category) {
+                if ($category->manufacturer_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+
         $seller->arrayCategories = $arrayCategories;
         
         for ($i=0; $i < count($seller->arrayCategories); $i++) { 
@@ -128,7 +177,7 @@ class SellersController extends Controller
         }               
         $seller->arrayCatNames = $arrayCatNames;
 
-        return view('admin.sellers_update', ['title' => $title,'seller' => $seller,'products' => $products ]);
+        return view('admin.sellers_update', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object ]);
     }
 
     /**
@@ -138,12 +187,12 @@ class SellersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $object, $id)
     {
         $products = ProductCategories::all();
         $arrayCatNames = $request->input('arrayCatNames');
         
-        $seller_to_be_updated = Sellers::find($id);
+        $seller_to_be_updated = parent::objectsOne($object, $id);
         $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person'];
 
         foreach($fields as $field){
@@ -158,12 +207,12 @@ class SellersController extends Controller
             }
         }
         
-        DB::table('sellers_to_product_categories')
-        ->where('seller_id', '=', $id)
+        DB::table(parent::tableName($object).'s_to_product_categories')
+        ->where(parent::tableName($object).'_id', '=', $id)
         ->delete();
         for ($i=0; $i < count($arrayCategories); $i++) { 
-            DB::table('sellers_to_product_categories')
-            ->insert(['seller_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
+            DB::table(parent::tableName($object).'s_to_product_categories')
+            ->insert([parent::tableName($object).'_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
         }
 
         
@@ -173,38 +222,62 @@ class SellersController extends Controller
 
         $seller_to_be_updated->arrayCatNames = $arrayCatNames;
         
-        $title = 'Изменение экспортера '.$seller_to_be_updated->name;
-        return view('admin.sellers_update', ['title' => $title,'seller' => $seller_to_be_updated,'products' => $products, 'message' =>  $message]);
+        $title = 'Изменение '.parent::translitFunc($object).' '.$seller_to_be_updated->name;
+        return view('admin.sellers_update', ['title' => $title,'seller' => $seller_to_be_updated,'products' => $products, 'message' =>  $message, 'object' =>  $object]);
     }
 
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, $object)
     {
         $id = $request->input('action');
-        DB::table('sellers_to_product_categories')
-        ->where('seller_id', '=', $id)
+        DB::table(parent::tableName($object).'s_to_product_categories')
+        ->where(parent::tableName($object).'_id', '=', $id)
         ->delete();
         
-        DB::table('sellers')
+        DB::table(parent::tableName($object).'s')
         ->where('id', '=', $id)
         ->delete();
 
-        return redirect()->route('adminIndex');
+        return redirect()->back()->with('message','Запись успешно удалена!');
     }
 
 
-    public function showSeller($id)
+    public function showSeller($object, $id)
     {
         $products = ProductCategories::all();
-        $objCategories = DB::select('select * from sellers_to_product_categories');
-        $seller = Sellers::find($id);
-        $title = 'Подробная информация об экспортере '.$seller->name;
-        
-        foreach ($objCategories as $category) {
-            if ($category->seller_id == $seller->id) {
-                $arrayCategories[] = $category->product_category_id;
+        $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
+        $seller = parent::objectsOne($object, $id);
+        $title = 'Подробная информация об '.parent::translitFunc($object).' '.$seller->name;
+
+        if ($object == 'eksportyori') {             
+            foreach ($objCategories as $category) {
+                if ($category->exporter_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
             }
         }
+        elseif ($object == 'importyori') {              
+            foreach ($objCategories as $category) {
+                if ($category->importer_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+        elseif ($object == 'fermeri') {             
+            foreach ($objCategories as $category) {
+                if ($category->farm_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+        elseif ($object == 'proizvoditeli') {               
+            foreach ($objCategories as $category) {
+                if ($category->manufacturer_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+
         $seller->arrayCategories = $arrayCategories;
         
         for ($i=0; $i < count($seller->arrayCategories); $i++) { 
@@ -216,7 +289,7 @@ class SellersController extends Controller
         }               
         $seller->arrayCatNames = $arrayCatNames;
 
-        return view('admin.seller', ['title' => $title,'seller' => $seller,'products' => $products ]);
+        return view('admin.seller', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object ]);
     }
 
 

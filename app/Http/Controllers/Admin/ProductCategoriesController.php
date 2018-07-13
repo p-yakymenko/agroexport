@@ -66,7 +66,19 @@ class ProductCategoriesController extends Controller
 	public function destroy(Request $request)
 	{
 		$id = $request->input('action');
-		DB::table('sellers_to_product_categories')
+		DB::table('exporters_to_product_categories')
+		->where('product_category_id', '=', $id)
+		->delete();
+
+		DB::table('importers_to_product_categories')
+		->where('product_category_id', '=', $id)
+		->delete();
+
+		DB::table('farms_to_product_categories')
+		->where('product_category_id', '=', $id)
+		->delete();
+
+		DB::table('manufacturers_to_product_categories')
 		->where('product_category_id', '=', $id)
 		->delete();
 

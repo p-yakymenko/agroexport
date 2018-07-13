@@ -54,20 +54,63 @@
 
                             @if(isset($products) && is_object($products))
                             @foreach($products as $product)
-                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
+                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Экспортёры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
                             @endforeach
                             @endif
-
+                            <li>
+                                <a href="{{ url('/admin/import-excel/'.Transliterate::make( 'Экспортёры', ['type' => 'url', 'lowercase' => true])) }}"> Импорт из Excel </a>
+                            </li> 
                         </ul>
                     </li>
                     
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Импортёры </a>
+                        <ul class="sub-menu children dropdown-menu">
+
+                            @if(isset($products) && is_object($products))
+                            @foreach($products as $product)
+                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Импортёры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
+                            @endforeach
+                            @endif
+                            <li>
+                                <a href="{{ url('/admin/import-excel/'.Transliterate::make( 'Импортёры', ['type' => 'url', 'lowercase' => true])) }}"> Импорт из Excel </a>
+                            </li> 
+                        </ul>
+                    </li>
+                    
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Фермеры </a>
+                        <ul class="sub-menu children dropdown-menu">
+
+                            @if(isset($products) && is_object($products))
+                            @foreach($products as $product)
+                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Фермеры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
+                            @endforeach
+                            @endif
+                            <li>
+                                <a href="{{ url('/admin/import-excel/'.Transliterate::make( 'Фермеры', ['type' => 'url', 'lowercase' => true])) }}"> Импорт из Excel </a>
+                            </li> 
+                        </ul>
+                    </li>
+
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Производители </a>
+                        <ul class="sub-menu children dropdown-menu">
+
+                            @if(isset($products) && is_object($products))
+                            @foreach($products as $product)
+                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Производители', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
+                            @endforeach
+                            @endif
+                            <li>
+                                <a href="{{ url('/admin/import-excel/'.Transliterate::make( 'Производители', ['type' => 'url', 'lowercase' => true])) }}"> Импорт из Excel </a>
+                            </li> 
+                        </ul>
+                    </li>
 
                     <li>
                         <a href="{{route('adminCategories')}}"><i class="menu-icon fa fa-cubes"></i> Продукты </a>
-                    </li>
-                    <li>
-                        <a href="{{route('importFile')}}"><i class="menu-icon fa fa-etsy"></i> Импорт из Excel </a>
-                    </li>                   
+                    </li>                                     
                     <li>
                         <a href="{{route('adminUsers')}}"><i class="menu-icon fa fa-address-card "></i> Пользователи </a>
                     </li>                   
@@ -158,7 +201,16 @@
     $(document).ready(function() {
       $('#bootstrap-data-table-export').DataTable();
       $('select.form-control > option:last-child').text('Все');
-    } );
+      
+      if ($('#bootstrap-data-table_info').text() == 'Showing 0 to 0 of 0 entries') {
+        $('#bootstrap-data-table_info').text('');
+      }
+      
+      if ($('.dataTables_empty').text() == 'No data available in table') {
+        $('.dataTables_empty').text('Нет данных');
+      }
+           
+  } );
 </script>
 
 

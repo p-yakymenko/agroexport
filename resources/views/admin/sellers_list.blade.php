@@ -28,7 +28,10 @@
 					<div class="card-header">
 						<strong class="card-title">{{ $title }}</strong>
 					</div>
-					<a class="btn btn-primary" href="{{ route('showAdd') }}">Добавить</a>
+					@if(Session::has('message'))
+					<h3>{{Session::get('message')}}</h3>
+					@endif
+					<a class="btn btn-primary" href="{{ route('showAdd',['object'=>$object]) }}">Добавить</a>
 					<div class="card-body">
 						<table id="bootstrap-data-table" class="table table-striped table-bordered">
 							<thead>
@@ -47,38 +50,38 @@
 								@foreach($sellers as $k=>$seller)
 								
 								<tr>
-									<td><a title="Подробнее" href="{{ url('/admin/seller/'.$seller->id) }}" style="color: blue;">{{$seller->name}}</a>
+									<td><a title="Подробнее" href="{{ url('/admin/seller/'.$object.'/'.$seller->id) }}" style="color: blue;">{{$seller->name}}</a>
 										<p>{{$seller->address}}</p>
 										<p>{{$seller->country}}</p>
 									</td>
 									<td>{{$seller->phone}}</td>
-                                    <td>{{$seller->email}}</td>
-                                    <td>{{$seller->site}}</td> 
-                                    <td>
-                                    	@for($i=0; $i < count($seller->arrayCatNames); $i++)
-                                    	<p>{{$seller->arrayCatNames[$i]}}</p>
-                                    	@endfor
-                                    </td>
-                                    <td>
-                                    	<a class="btn btn-primary" href="{{ url('/admin/seller-update/'.$seller->id) }}">Изменить</a>
-                                    	{!! Form::open(['url'=>route('deleteSeller'),'onsubmit' => 'return ConfirmDelete()', 'class'=>'form-horizontal','method' => 'POST']) !!}
-                                    	{!! Form::hidden('action',$seller->id) !!}
-                                    	{!! Form::button('Удалить',['class'=>'btn btn-danger','type'=>'submit']) !!}
-                                    	{!! Form::close() !!}
-                                    </td>
-                                </tr>
+									<td>{{$seller->email}}</td>
+									<td>{{$seller->site}}</td> 
+									<td>
+										@for($i=0; $i < count($seller->arrayCatNames); $i++)
+										<p>{{$seller->arrayCatNames[$i]}}</p>
+										@endfor
+									</td>
+									<td>
+										<a class="btn btn-primary" href="{{ url('/admin/seller-update/'.$object.'/'.$seller->id) }}">Изменить</a>
+										{!! Form::open(['url'=>route('deleteSeller',['object'=>$object]),'onsubmit' => 'return ConfirmDelete()', 'class'=>'form-horizontal','method' => 'POST']) !!}
+										{!! Form::hidden('action',$seller->id) !!}
+										{!! Form::button('Удалить',['class'=>'btn btn-danger','type'=>'submit']) !!}
+										{!! Form::close() !!}
+									</td>
+								</tr>
 
-                                @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+								@endforeach
+								@endif
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 
 
-        </div>
-    </div><!-- .animated -->
+		</div>
+	</div><!-- .animated -->
 </div><!-- .content -->
 
 <script>

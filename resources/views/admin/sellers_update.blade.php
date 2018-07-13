@@ -32,7 +32,7 @@
 
 						@if(isset($seller))						
 
-						{!! Form::open(['url'=>route('sellersUpdate',['id'=>$seller->id]), 'class'=>'form-horizontal','method' => 'POST']) !!}
+						{!! Form::open(['url'=>route('sellersUpdate',['object'=>$object, 'id'=>$seller->id]), 'class'=>'form-horizontal','method' => 'POST']) !!}
 
 						<div class="form-group">
 							{!! Form::label('name','Название',['class' => 'col-md-2 control-label'])   !!}

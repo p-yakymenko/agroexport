@@ -30,7 +30,7 @@
 					</div>
 					<div class="card-body">					
 
-						{!! Form::open(['url'=>route('sellersAdd'), 'class'=>'form-horizontal','method' => 'POST']) !!}
+						{!! Form::open(['url'=>route('sellersAdd',['object'=>$object]), 'class'=>'form-horizontal','method' => 'POST']) !!}
 
 						<div class="form-group">
 							{!! Form::label('name','Название',['class' => 'col-md-2 control-label'])   !!}
