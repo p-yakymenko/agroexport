@@ -11,6 +11,7 @@ use App;
 class ImportExcelController extends AdminController
 {
 	
+    //параметр object это тип продавца
 	public function index($object = null) {
 		
 		$products = ProductCategories::all();

@@ -11,6 +11,7 @@ use DB;
 class SellersController extends AdminController
 {
   
+    //параметр object это тип продавца
     public function index($object = null, $product = null)
     {
         $products = ProductCategories::all();
@@ -21,9 +22,10 @@ class SellersController extends AdminController
             }
         }
 
-        $title = 'Список экспортёров '.$our_product;
+        $title = 'Список '.parent::translitFunc($object).' '.$our_product;
         $sellers = parent::objectsAll($object);
         $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
+
         //находим продукты(id) связанные с продавцом
         foreach ($sellers as $seller) {
             if ($seller->id) {
@@ -248,6 +250,8 @@ class SellersController extends AdminController
         $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
         $seller = parent::objectsOne($object, $id);
         $title = 'Подробная информация об '.parent::translitFunc($object).' '.$seller->name;
+        $arrayCategories = array();
+        $arrayCatNames = array();
 
         if ($object == 'eksportyori') {             
             foreach ($objCategories as $category) {
