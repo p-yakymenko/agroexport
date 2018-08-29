@@ -59,7 +59,7 @@ class AdminController extends Controller
 
 	}
 
-
+	
 	protected function objectsOne($obj, $id){
 
 		$objects = array(

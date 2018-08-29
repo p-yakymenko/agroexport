@@ -200,11 +200,9 @@
 <script type="text/javascript">
     $(document).ready(function() {
       $('#bootstrap-data-table-export').DataTable();
-      $('select.form-control > option:last-child').text('Все');
-      
-      if ($('#bootstrap-data-table_info').text() == 'Showing 0 to 0 of 0 entries') {
-        $('#bootstrap-data-table_info').text('');
-      }
+
+      $('#bootstrap-data-table_wrapper > div:nth-child(3)').hide();
+      $('#bootstrap-data-table_wrapper > div:nth-child(1) > div:nth-child(1)').hide();
       
       if ($('.dataTables_empty').text() == 'No data available in table') {
         $('.dataTables_empty').text('Нет данных');

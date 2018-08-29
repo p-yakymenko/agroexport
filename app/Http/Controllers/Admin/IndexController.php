@@ -15,7 +15,7 @@ use DB;
 class IndexController extends Controller
 {
 
-    public function index()
+/*    public function index()
     {
         $title = 'Весь список';
         $objects = array();
@@ -141,5 +141,13 @@ class IndexController extends Controller
         $objects[] = 'proizvoditeli';
 
         return view('admin.index', ['title' => $title,'exporters' => $exporters,'importers' => $importers,'farms' => $farms,'manufacturers' => $manufacturers, 'products' =>  $products, 'objects' =>  $objects]);
+    }*/
+
+    public function index(){
+
+        $products = ProductCategories::all();
+        $title = 'Пользователи';
+        $users = DB::select('select * from users');
+        return view('admin.users', ['title' => $title,'users' => $users, 'products' =>  $products ]);
     }
 }

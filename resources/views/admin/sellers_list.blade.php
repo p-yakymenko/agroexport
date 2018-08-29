@@ -48,7 +48,7 @@
 								
 								@if(isset($sellers))
 								@foreach($sellers as $k=>$seller)
-								
+
 								<tr>
 									<td><a title="Подробнее" href="{{ url('/admin/seller/'.$object.'/'.$seller->id) }}" style="color: blue;">{{$seller->name}}</a>
 										<p>{{$seller->address}}</p>
@@ -75,6 +75,7 @@
 								@endif
 							</tbody>
 						</table>
+						{{ $sellers->links() }}
 					</div>
 				</div>
 			</div>

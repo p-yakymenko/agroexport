@@ -10,20 +10,47 @@ use DB;
 
 class SellersController extends AdminController
 {
-  
+
     //параметр object это тип продавца
     public function index($object = null, $product = null)
     {
         $products = ProductCategories::all();
         
+        //выясняем id и имя продукта     
         foreach ($products as $value) {
             if (Transliterate::make($value->name, ['type' => 'url', 'lowercase' => true]) == $product) {
                 $our_product = $value->name;
+                $id_product = $value->id;
             }
         }
 
+        //отфильтровуем продавцов по нужному продукту
+        $new_sellers = array();
+        $our_sellers = DB::table(parent::tableName($object).'s_to_product_categories')
+        ->select(parent::tableName($object).'_id')
+        ->where('product_category_id', '=', $id_product)
+        ->get();
+
+        foreach ($our_sellers as $key => $value) {
+            if ($object == 'eksportyori') { 
+                $new_sellers[] = $value->exporter_id;                               
+            }
+            elseif ($object == 'importyori') {              
+                $new_sellers[] = $value->importer_id; 
+            }
+            elseif ($object == 'fermeri') {             
+                $new_sellers[] = $value->farm_id; 
+            }
+            elseif ($object == 'proizvoditeli') {               
+                $new_sellers[] = $value->manufacturer_id; 
+            }            
+        }
+        
+        /*echo '<pre>'. print_r($our_sellers,true).'</pre>';
+        die();*/
+        $sellers = DB::table(parent::tableName($object).'s')->whereIn('id', $new_sellers)->paginate(10);        
+        
         $title = 'Список '.parent::translitFunc($object).' '.$our_product;
-        $sellers = parent::objectsAll($object);
         $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
 
         //находим продукты(id) связанные с продавцом
@@ -63,6 +90,7 @@ class SellersController extends AdminController
             }
             $seller->arrayCategories = $arrayCategories;
         }
+        
         //переводим id продуктов в названия
         $arrayCatNames = array();
         foreach ($sellers as $seller) {
@@ -78,15 +106,9 @@ class SellersController extends AdminController
             }
             $seller->arrayCatNames = $arrayCatNames;
         }
-        //отфильтровуем продавцов по нужному продукту
-        $new_sellers = array();
-        foreach ($sellers as $seller) {
-            if (in_array($our_product, $seller->arrayCatNames)) {
-                $new_sellers[] =  $seller;
-            }
-        }
 
-        return view('admin.sellers', ['title' => $title,'sellers' => $new_sellers, 'products' =>  $products, 'object' =>  $object]);
+
+        return view('admin.sellers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object]);
     }
 
     

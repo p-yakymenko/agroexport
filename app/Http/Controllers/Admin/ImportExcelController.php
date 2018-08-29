@@ -76,6 +76,10 @@ class ImportExcelController extends AdminController
     		}
     		break;			
     	}
+        
+        /*echo '<pre>'. print_r($uploaded_entries,true).'</pre>';
+        die();*/
+        
         //закладываемся на 1 уровень объекта
     	foreach ($uploaded_entries as $uploaded_entry) {
     		foreach ($uploaded_entry as $key => $value) {				
