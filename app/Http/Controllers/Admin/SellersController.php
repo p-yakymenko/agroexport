@@ -43,10 +43,16 @@ class SellersController extends AdminController
             }
             elseif ($object == 'proizvoditeli') {               
                 $new_sellers[] = $value->manufacturer_id; 
+            }
+            elseif ($object == 'elevatori') {             
+                $new_sellers[] = $value->elevator_id; 
+            }
+            elseif ($object == 'perevozchiki') {               
+                $new_sellers[] = $value->carrier_id; 
             }            
         }
         
-        /*echo '<pre>'. print_r($our_sellers,true).'</pre>';
+        /*echo '<pre>'. print_r(Transliterate::make('перевозчики', ['type' => 'url', 'lowercase' => true]),true).'</pre>';
         die();*/
         $sellers = DB::table(parent::tableName($object).'s')->whereIn('id', $new_sellers)->paginate(10);        
         
@@ -82,6 +88,20 @@ class SellersController extends AdminController
                 elseif ($object == 'proizvoditeli') {               
                     foreach ($objCategories as $category) {
                         if ($category->manufacturer_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'elevatori') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->elevator_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'perevozchiki') {               
+                    foreach ($objCategories as $category) {
+                        if ($category->carrier_id == $seller->id) {
                             $arrayCategories[] = $category->product_category_id;
                         }
                     }
@@ -189,6 +209,21 @@ class SellersController extends AdminController
                 }
             }
         }
+        elseif ($object == 'elevatori') {             
+            foreach ($objCategories as $category) {
+                if ($category->elevator_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+        elseif ($object == 'perevozchiki') {               
+            foreach ($objCategories as $category) {
+                if ($category->carrier_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+
 
         $seller->arrayCategories = $arrayCategories;
         
@@ -299,6 +334,20 @@ class SellersController extends AdminController
         elseif ($object == 'proizvoditeli') {               
             foreach ($objCategories as $category) {
                 if ($category->manufacturer_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+        elseif ($object == 'elevatori') {             
+            foreach ($objCategories as $category) {
+                if ($category->elevator_id == $seller->id) {
+                    $arrayCategories[] = $category->product_category_id;
+                }
+            }
+        }
+        elseif ($object == 'perevozchiki') {               
+            foreach ($objCategories as $category) {
+                if ($category->carrier_id == $seller->id) {
                     $arrayCategories[] = $category->product_category_id;
                 }
             }

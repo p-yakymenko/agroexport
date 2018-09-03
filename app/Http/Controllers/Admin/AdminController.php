@@ -8,6 +8,8 @@ use App\Exporters;
 use App\Importers;
 use App\Farms;
 use App\Manufacturers;
+use App\Elevators;
+use App\Carriers;
 
 class AdminController extends Controller
 {
@@ -20,7 +22,9 @@ class AdminController extends Controller
 			'importyori' => 'Импортёры',   
 			'fermeri' => 'Фермеры',
 			'proizvoditeli' => 'Производители',
-
+			'elevatori' => 'Элеваторы',
+			'perevozchiki' => 'Перевозчики',
+					
 		);
 
 		return $word = strtr($word, $translit);
@@ -36,6 +40,8 @@ class AdminController extends Controller
 			'importyori' => new Importers(),   
 			'fermeri' => new Farms(),
 			'proizvoditeli' => new Manufacturers(),
+			'elevatori' => new Elevators(),
+			'perevozchiki' => new Carriers(),
 
 		);
 
@@ -52,6 +58,8 @@ class AdminController extends Controller
 			'importyori' => Importers::all(),   
 			'fermeri' => Farms::all(),
 			'proizvoditeli' => Manufacturers::all(),
+			'elevatori' => Elevators::all(),
+			'perevozchiki' => Carriers::all(),
 
 		);
 
@@ -68,6 +76,8 @@ class AdminController extends Controller
 			'importyori' => Importers::find($id),   
 			'fermeri' => Farms::find($id),
 			'proizvoditeli' => Manufacturers::find($id),
+			'elevatori' => Elevators::find($id),
+			'perevozchiki' => Carriers::find($id),
 
 		);
 
@@ -84,6 +94,8 @@ class AdminController extends Controller
 			'importyori' => 'importer',   
 			'fermeri' => 'farm',
 			'proizvoditeli' => 'manufacturer',
+			'elevatori' => 'elevator',
+			'perevozchiki' => 'carrier',
 
 		);
 

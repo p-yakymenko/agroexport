@@ -162,8 +162,119 @@ class ImportExcelController extends AdminController
     		}
     	}
 
-    	$title = 'Импорт из Excel '. parent::translitFunc($object);
-    	return view('admin.import_excel', ['title' => $title, 'products' =>  $products, 'message' =>  $message, 'object' =>  $object]);
+    	//$title = 'Импорт из Excel '. parent::translitFunc($object);
+    	//return view('admin.import_excel', ['title' => $title, 'products' =>  $products, 'message' =>  $message, 'object' =>  $object]);
+
+        //выясняем id и имя продукта     
+        foreach ($products as $value) {
+            if ($value->name == $name_file) {
+                $our_product = $value->name;
+                $id_product = $value->id;
+            }
+        }
+
+        //отфильтровуем продавцов по нужному продукту
+        $new_sellers = array();
+        $our_sellers = DB::table(parent::tableName($object).'s_to_product_categories')
+        ->select(parent::tableName($object).'_id')
+        ->where('product_category_id', '=', $id_product)
+        ->get();
+
+        foreach ($our_sellers as $key => $value) {
+            if ($object == 'eksportyori') { 
+                $new_sellers[] = $value->exporter_id;                               
+            }
+            elseif ($object == 'importyori') {              
+                $new_sellers[] = $value->importer_id; 
+            }
+            elseif ($object == 'fermeri') {             
+                $new_sellers[] = $value->farm_id; 
+            }
+            elseif ($object == 'proizvoditeli') {               
+                $new_sellers[] = $value->manufacturer_id; 
+            }
+            elseif ($object == 'elevatori') {             
+                $new_sellers[] = $value->elevator_id; 
+            }
+            elseif ($object == 'perevozchiki') {               
+                $new_sellers[] = $value->carrier_id; 
+            }            
+        }
+        
+        $sellers = DB::table(parent::tableName($object).'s')->whereIn('id', $new_sellers)->paginate(10);
+        
+        $title = 'Список '.parent::translitFunc($object).' '.$our_product;
+        $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
+
+        //находим продукты(id) связанные с продавцом
+        foreach ($sellers as $seller) {
+            if ($seller->id) {
+                $arrayCategories = array();
+
+                if ($object == 'eksportyori') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->exporter_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'importyori') {              
+                    foreach ($objCategories as $category) {
+                        if ($category->importer_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'fermeri') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->farm_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'proizvoditeli') {               
+                    foreach ($objCategories as $category) {
+                        if ($category->manufacturer_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'elevatori') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->elevator_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'perevozchiki') {               
+                    foreach ($objCategories as $category) {
+                        if ($category->carrier_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+
+            }
+            $seller->arrayCategories = $arrayCategories;
+        }
+        
+        //переводим id продуктов в названия
+        $arrayCatNames = array();
+        foreach ($sellers as $seller) {
+            if ($seller->arrayCategories) {
+                $arrayCatNames = array();
+                for ($i=0; $i < count($seller->arrayCategories); $i++) { 
+                    foreach ($products as $product) {
+                        if ($seller->arrayCategories[$i] == $product->id) {
+                            $arrayCatNames[$i] = $product->name;
+                        }
+                    }
+                }               
+            }
+            $seller->arrayCatNames = $arrayCatNames;
+        }
+
+        return view('admin.sellers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object]);
     }
 
 }
