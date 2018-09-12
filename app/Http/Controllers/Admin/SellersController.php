@@ -14,121 +14,151 @@ class SellersController extends AdminController
     //параметр object это тип продавца
     public function index($object = null, $product = null)
     {
+
         $products = ProductCategories::all();
-        
-        //выясняем id и имя продукта     
-        foreach ($products as $value) {
-            if (Transliterate::make($value->name, ['type' => 'url', 'lowercase' => true]) == $product) {
-                $our_product = $value->name;
-                $id_product = $value->id;
-            }
-        }
 
-        //отфильтровуем продавцов по нужному продукту
-        $new_sellers = array();
-        $our_sellers = DB::table(parent::tableName($object).'s_to_product_categories')
-        ->select(parent::tableName($object).'_id')
-        ->where('product_category_id', '=', $id_product)
-        ->get();
+        if ($object != 'fermeri' ) {
 
-        foreach ($our_sellers as $key => $value) {
-            if ($object == 'eksportyori') { 
-                $new_sellers[] = $value->exporter_id;                               
+            //выясняем id и имя продукта     
+            foreach ($products as $value) {
+                if (Transliterate::make($value->name, ['type' => 'url', 'lowercase' => true]) == $product) {
+                    $our_product = $value->name;
+                    $id_product = $value->id;
+                }
             }
-            elseif ($object == 'importyori') {              
-                $new_sellers[] = $value->importer_id; 
-            }
-            elseif ($object == 'fermeri') {             
-                $new_sellers[] = $value->farm_id; 
-            }
-            elseif ($object == 'proizvoditeli') {               
-                $new_sellers[] = $value->manufacturer_id; 
-            }
-            elseif ($object == 'elevatori') {             
-                $new_sellers[] = $value->elevator_id; 
-            }
-            elseif ($object == 'perevozchiki') {               
-                $new_sellers[] = $value->carrier_id; 
-            }            
-        }
-        
-        /*echo '<pre>'. print_r(Transliterate::make('перевозчики', ['type' => 'url', 'lowercase' => true]),true).'</pre>';
-        die();*/
-        $sellers = DB::table(parent::tableName($object).'s')->whereIn('id', $new_sellers)->paginate(10);        
-        
-        $title = 'Список '.parent::translitFunc($object).' '.$our_product;
-        $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
 
-        //находим продукты(id) связанные с продавцом
-        foreach ($sellers as $seller) {
-            if ($seller->id) {
-                $arrayCategories = array();
+            //отфильтровуем продавцов по нужному продукту
+            $new_sellers = array();
+            $our_sellers = DB::table(parent::tableName($object).'s_to_product_categories')
+            ->select(parent::tableName($object).'_id')
+            ->where('product_category_id', '=', $id_product)
+            ->get();
 
-                if ($object == 'eksportyori') {             
-                    foreach ($objCategories as $category) {
-                        if ($category->exporter_id == $seller->id) {
-                            $arrayCategories[] = $category->product_category_id;
-                        }
-                    }
+            foreach ($our_sellers as $key => $value) {
+                if ($object == 'eksportyori') { 
+                    $new_sellers[] = $value->exporter_id;                               
                 }
                 elseif ($object == 'importyori') {              
-                    foreach ($objCategories as $category) {
-                        if ($category->importer_id == $seller->id) {
-                            $arrayCategories[] = $category->product_category_id;
-                        }
-                    }
-                }
-                elseif ($object == 'fermeri') {             
-                    foreach ($objCategories as $category) {
-                        if ($category->farm_id == $seller->id) {
-                            $arrayCategories[] = $category->product_category_id;
-                        }
-                    }
+                    $new_sellers[] = $value->importer_id; 
                 }
                 elseif ($object == 'proizvoditeli') {               
-                    foreach ($objCategories as $category) {
-                        if ($category->manufacturer_id == $seller->id) {
-                            $arrayCategories[] = $category->product_category_id;
-                        }
-                    }
+                    $new_sellers[] = $value->manufacturer_id; 
                 }
                 elseif ($object == 'elevatori') {             
-                    foreach ($objCategories as $category) {
-                        if ($category->elevator_id == $seller->id) {
-                            $arrayCategories[] = $category->product_category_id;
-                        }
-                    }
+                    $new_sellers[] = $value->elevator_id; 
                 }
                 elseif ($object == 'perevozchiki') {               
-                    foreach ($objCategories as $category) {
-                        if ($category->carrier_id == $seller->id) {
-                            $arrayCategories[] = $category->product_category_id;
+                    $new_sellers[] = $value->carrier_id; 
+                }            
+            }
+            
+            
+            $sellers = DB::table(parent::tableName($object).'s')->whereIn('id', $new_sellers)->paginate(10);        
+            
+            $title = 'Список '.parent::translitFunc($object).' '.$our_product;
+            $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
+
+            //находим продукты(id) связанные с продавцом
+            foreach ($sellers as $seller) {
+                if ($seller->id) {
+                    $arrayCategories = array();
+
+                    if ($object == 'eksportyori') {             
+                        foreach ($objCategories as $category) {
+                            if ($category->exporter_id == $seller->id) {
+                                $arrayCategories[] = $category->product_category_id;
+                            }
                         }
+                    }
+                    elseif ($object == 'importyori') {              
+                        foreach ($objCategories as $category) {
+                            if ($category->importer_id == $seller->id) {
+                                $arrayCategories[] = $category->product_category_id;
+                            }
+                        }
+                    }
+                    elseif ($object == 'proizvoditeli') {               
+                        foreach ($objCategories as $category) {
+                            if ($category->manufacturer_id == $seller->id) {
+                                $arrayCategories[] = $category->product_category_id;
+                            }
+                        }
+                    }
+                    elseif ($object == 'elevatori') {             
+                        foreach ($objCategories as $category) {
+                            if ($category->elevator_id == $seller->id) {
+                                $arrayCategories[] = $category->product_category_id;
+                            }
+                        }
+                    }
+                    elseif ($object == 'perevozchiki') {               
+                        foreach ($objCategories as $category) {
+                            if ($category->carrier_id == $seller->id) {
+                                $arrayCategories[] = $category->product_category_id;
+                            }
+                        }
+                    }
+
+                }
+                $seller->arrayCategories = $arrayCategories;
+            }
+            
+            //переводим id продуктов в названия
+            $arrayCatNames = array();
+            foreach ($sellers as $seller) {
+                if ($seller->arrayCategories) {
+                    $arrayCatNames = array();
+                    for ($i=0; $i < count($seller->arrayCategories); $i++) { 
+                        foreach ($products as $product) {
+                            if ($seller->arrayCategories[$i] == $product->id) {
+                                $arrayCatNames[$i] = $product->name;
+                            }
+                        }
+                    }               
+                }
+                $seller->arrayCatNames = $arrayCatNames;
+            }
+
+            
+            return view('admin.sellers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object]); 
+        }
+        else{
+
+            $sellers = DB::table(parent::tableName($object).'s')->paginate(10);
+            $title = 'Список '.parent::translitFunc($object);
+            $region_arr = DB::table(parent::tableName($object).'s')
+            ->select('region', 'district')
+            ->orderBy('region')
+            ->get();
+
+            //создаем массив регионов
+            foreach ($region_arr as $region) {
+                $new_region = $region -> region;
+                break;
+            }
+            $new_district = '';
+
+            foreach ($region_arr as $region) {                
+                if ($new_region == $region -> region) {
+                    if ($new_district != $region -> district) {
+                        $new_arr->$new_region[] = $region -> district;
+                        $new_district = $region -> district;
+                    }                   
+                }
+                else{
+                    $new_region = $region -> region;
+                    if ($new_district != $region -> district) {
+                        $new_arr->$new_region[] = $region -> district;
+                        $new_district = $region -> district;
                     }
                 }
+            }
 
-            }
-            $seller->arrayCategories = $arrayCategories;
-        }
-        
-        //переводим id продуктов в названия
-        $arrayCatNames = array();
-        foreach ($sellers as $seller) {
-            if ($seller->arrayCategories) {
-                $arrayCatNames = array();
-                for ($i=0; $i < count($seller->arrayCategories); $i++) { 
-                    foreach ($products as $product) {
-                        if ($seller->arrayCategories[$i] == $product->id) {
-                            $arrayCatNames[$i] = $product->name;
-                        }
-                    }
-                }               
-            }
-            $seller->arrayCatNames = $arrayCatNames;
+            /*echo '<pre>'. print_r($new_arr,true).'</pre>';
+            die();*/
+            return view('admin.farmers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $new_arr]);
         }
 
-
-        return view('admin.sellers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object]);
     }
 
     

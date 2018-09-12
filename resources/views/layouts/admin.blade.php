@@ -82,9 +82,16 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Фермеры </a>
                         <ul class="sub-menu children dropdown-menu">
 
-                            @if(isset($products) && is_object($products))
-                            @foreach($products as $product)
-                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Фермеры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
+                            @if(isset($region_arr) && is_object($region_arr))
+                            @foreach($region_arr as $k=>$region)
+                            <li class="menu-item-has-children dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{$k}}</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    @for($i=0; $i < count($region); $i++)
+                                    <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Фермеры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($k, ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($region[$i], ['type' => 'url', 'lowercase' => true])) }}">{{$region[$i]}}</a></li>
+                                    @endfor
+                                </ul>
+                            </li>                                                 
                             @endforeach
                             @endif
                             <li>

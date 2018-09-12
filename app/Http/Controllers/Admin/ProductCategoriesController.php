@@ -74,11 +74,15 @@ class ProductCategoriesController extends Controller
 		->where('product_category_id', '=', $id)
 		->delete();
 
-		DB::table('farms_to_product_categories')
+		DB::table('manufacturers_to_product_categories')
 		->where('product_category_id', '=', $id)
 		->delete();
 
-		DB::table('manufacturers_to_product_categories')
+		DB::table('elevators_to_product_categories')
+		->where('product_category_id', '=', $id)
+		->delete();
+
+		DB::table('carriers_to_product_categories')
 		->where('product_category_id', '=', $id)
 		->delete();
 
