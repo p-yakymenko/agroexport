@@ -107,6 +107,8 @@ class AdminController extends Controller
 
 	protected function getRegionArr($object){
 
+		$new_arr = (object)[];
+
 		$region_arr = DB::table($this->tableName($object).'s')
             ->select('region', 'district')
             ->orderBy('region')
