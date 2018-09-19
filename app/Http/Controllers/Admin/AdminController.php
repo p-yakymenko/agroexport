@@ -25,7 +25,7 @@ class AdminController extends Controller
 			'proizvoditeli' => 'Производители',
 			'elevatori' => 'Элеваторы',
 			'perevozchiki' => 'Перевозчики',
-					
+
 		);
 
 		return $word = strtr($word, $translit);
@@ -108,34 +108,41 @@ class AdminController extends Controller
 	protected function getRegionArr($object){
 
 		$new_arr = (object)[];
+		$district_name = array();
 
 		$region_arr = DB::table($this->tableName($object).'s')
-            ->select('region', 'district')
-            ->orderBy('region')
-            ->get();
+		->select('region', 'district')
+		->orderBy('region')
+		->get();
 
             //создаем массив регионов
-            foreach ($region_arr as $region) {
-                $new_region = $region -> region;
-                break;
-            }
-            $new_district = '';
+		foreach ($region_arr as $region) {
+			$new_region = $region -> region;
+			break;
+		}
+		$new_district = '';
 
-            foreach ($region_arr as $region) {                
-                if ($new_region == $region -> region) {
-                    if ($new_district != $region -> district) {
-                        $new_arr->$new_region[] = $region -> district;
-                        $new_district = $region -> district;
-                    }                   
-                }
-                else{
-                    $new_region = $region -> region;
-                    if ($new_district != $region -> district) {
-                        $new_arr->$new_region[] = $region -> district;
-                        $new_district = $region -> district;
-                    }
-                }
-            }
+		foreach ($region_arr as $region) {                
+			if ($new_region == $region -> region) {
+				if ($new_district != $region -> district) {
+					if (!in_array($region -> district, $district_name)){
+						$district_name[] = $region -> district;
+						$new_arr->$new_region[] = $region -> district;
+						$new_district = $region -> district;
+					}
+				}                   
+			}
+			else{
+				$new_region = $region -> region;
+				if ($new_district != $region -> district) {
+					if (!in_array($region -> district, $district_name)){
+						$district_name[] = $region -> district;
+						$new_arr->$new_region[] = $region -> district;
+						$new_district = $region -> district;
+					}
+				}
+			}
+		}
 
 		return $new_arr;
 
