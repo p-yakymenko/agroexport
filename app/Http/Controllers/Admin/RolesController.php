@@ -3,29 +3,31 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Hash;
 use App\ProductCategories;
 use App\User;
 use DB;
 
 
-class RolesController extends Controller
+class RolesController extends AdminController
 {
 	public function index(){
 
 		$products = ProductCategories::all();
+		$region_arr = parent::getRegionArr('fermeri');
 		$title = 'Пользователи';
 		$users = DB::select('select * from users');
-		return view('admin.users', ['title' => $title,'users' => $users, 'products' =>  $products ]);
+		return view('admin.users', ['title' => $title,'users' => $users, 'products' =>  $products, 'region_arr' =>  $region_arr ]);
 	}
 
 
 	public function showAdd()
 	{
 		$products = ProductCategories::all();
+		$region_arr = parent::getRegionArr('fermeri');
 		$title = 'Добавление пользователя';
-		return view('admin.user_add', ['title' => $title, 'products' =>  $products]);
+		return view('admin.user_add', ['title' => $title, 'products' =>  $products, 'region_arr' =>  $region_arr]);
 	}
 
 
@@ -50,10 +52,11 @@ class RolesController extends Controller
 	{
 		
 		$products = ProductCategories::all();
+		$region_arr = parent::getRegionArr('fermeri');
 		$user = User::find($id);
 		$title = 'Изменение пользователя '.$user->name;
 
-		return view('admin.user_update', ['title' => $title,'user' => $user, 'products' =>  $products ]);
+		return view('admin.user_update', ['title' => $title,'user' => $user, 'products' =>  $products, 'region_arr' =>  $region_arr ]);
 	}
 
 

@@ -3,16 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Exporters;
-use App\Importers;
-use App\Farms;
-use App\Manufacturers;
+use App\Http\Controllers\Admin\AdminController;
 use App\ProductCategories;
 use Transliterate;
 use DB;
 
-class IndexController extends Controller
+class IndexController extends AdminController
 {
 
 /*    public function index()
@@ -146,8 +142,9 @@ class IndexController extends Controller
     public function index(){
 
         $products = ProductCategories::all();
+        $region_arr = parent::getRegionArr('fermeri');
         $title = 'Пользователи';
         $users = DB::select('select * from users');
-        return view('admin.users', ['title' => $title,'users' => $users, 'products' =>  $products ]);
+        return view('admin.users', ['title' => $title,'users' => $users, 'products' =>  $products, 'region_arr' =>  $region_arr]);
     }
 }

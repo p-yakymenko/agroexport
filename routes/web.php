@@ -24,7 +24,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function() {
 	
 	Route::get('/',['uses' => 'Admin\IndexController@index','as' => 'adminIndex']);
 	
-	Route::get('/sellers/{object}/{product?}',['uses' => 'Admin\SellersController@index','as' => 'adminSellers']);
+	Route::get('/sellers/{object}/{product?}/{district?}',['uses' => 'Admin\SellersController@index','as' => 'adminSellers']);
 
 	Route::post('/sellers/{object}',['uses' => 'Admin\SellersController@destroy','as' => 'deleteSeller']);
 

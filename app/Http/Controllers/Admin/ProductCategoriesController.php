@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminController;
 use App\ProductCategories;
 use DB;
 
-class ProductCategoriesController extends Controller
+class ProductCategoriesController extends AdminController
 {
 	public function index()
 	{
 		$title = 'Список продукции';
+		$region_arr = parent::getRegionArr('fermeri');
 		$products = ProductCategories::all();
 
-		return view('admin.product_categories', ['title' => $title,'products' => $products ]);
+		return view('admin.product_categories', ['title' => $title,'products' => $products, 'region_arr' =>  $region_arr ]);
 
 	}
 
@@ -22,9 +23,10 @@ class ProductCategoriesController extends Controller
 	public function show($id)
 	{
 		$product = ProductCategories::find($id);
+		$region_arr = parent::getRegionArr('fermeri');
 		$title = 'Изменение продукта '.$product->name;
 
-		return view('admin.product_categories_update', ['title' => $title, 'product' => $product ]);
+		return view('admin.product_categories_update', ['title' => $title, 'product' => $product, 'region_arr' =>  $region_arr ]);
 	}
 
 
@@ -45,7 +47,8 @@ class ProductCategoriesController extends Controller
 	    public function showAdd()
     {
         $title = 'Добавление продукта';
-        return view('admin.product_categories_add', ['title' => $title]);
+        $region_arr = parent::getRegionArr('fermeri');
+        return view('admin.product_categories_add', ['title' => $title, 'region_arr' =>  $region_arr]);
     }
 
 

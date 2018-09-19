@@ -80,6 +80,7 @@
 								{!! Form::text('contact_person',old('contact_person'),['class' => 'form-control'])!!}
 							</div>
 						</div>
+						@if($object != 'fermeri')
 						<div class="form-group">
 							<p>Продукция:</p>
 							<div class="col-md-8">
@@ -88,6 +89,28 @@
 								@endforeach							
 							</div>
 						</div>
+						@else
+						<div class="form-group">
+							{!! Form::label('region','Область',['class' => 'col-md-2 control-label'])   !!}
+							<div class="col-md-8">
+								{!! Form::text('region',old('region'),['class' => 'form-control'])!!}
+							</div>
+						</div>
+						<div class="form-group">
+							{!! Form::label('district','Район',['class' => 'col-md-2 control-label'])   !!}
+							<div class="col-md-8">
+								{!! Form::text('district',old('district'),['class' => 'form-control'])!!}
+							</div>
+						</div>
+						<div class="form-group">
+							<p>Продукция:</p>
+							<div class="col-md-8">
+								@for ($i=0; $i < count($farm_product); $i++)
+                                        <p>{!! Form::checkbox('farm_product[]', $farm_product[$i]) !!}{{$farm_product[$i]}}</p> 
+                                @endfor							
+							</div>
+						</div>
+						@endif
 
 						{!! Form::button('Сохранить',['class'=>'btn btn-primary','type'=>'submit']) !!}
 						{!! Form::close() !!}

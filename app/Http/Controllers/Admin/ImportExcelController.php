@@ -16,9 +16,10 @@ class ImportExcelController extends AdminController
 	public function index($object = null) {
 		
 		$products = ProductCategories::all();
+        $region_arr = parent::getRegionArr('fermeri');
 		$title = 'Импорт из Excel '. parent::translitFunc($object);
 		
-		return view('admin.import_excel', ['title' => $title, 'products' =>  $products, 'object' =>  $object]);
+		return view('admin.import_excel', ['title' => $title, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr]);
 		
 	}
 
@@ -319,7 +320,7 @@ class ImportExcelController extends AdminController
                 }       
             }    
 
-            $my_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
+            $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
 
             foreach ($value_arr as $uploaded_entry){
                 $new_seller = parent::objectsFunc($object);
@@ -335,9 +336,9 @@ class ImportExcelController extends AdminController
 
                 $json = array();
 
-                for ($i=0; $i < count($my_product); $i++) { 
+                for ($i=0; $i < count($farm_product); $i++) { 
                     if (!empty($uploaded_entry[$key_array[$i+10]])) {
-                        $json[] = $my_product[$i];
+                        $json[] = $farm_product[$i];
                     }
                 }
 

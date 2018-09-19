@@ -10,6 +10,7 @@ use App\Farms;
 use App\Manufacturers;
 use App\Elevators;
 use App\Carriers;
+use DB;
 
 class AdminController extends Controller
 {
@@ -100,6 +101,41 @@ class AdminController extends Controller
 		);
 
 		return $objects[$obj];
+
+	}
+
+
+	protected function getRegionArr($object){
+
+		$region_arr = DB::table($this->tableName($object).'s')
+            ->select('region', 'district')
+            ->orderBy('region')
+            ->get();
+
+            //создаем массив регионов
+            foreach ($region_arr as $region) {
+                $new_region = $region -> region;
+                break;
+            }
+            $new_district = '';
+
+            foreach ($region_arr as $region) {                
+                if ($new_region == $region -> region) {
+                    if ($new_district != $region -> district) {
+                        $new_arr->$new_region[] = $region -> district;
+                        $new_district = $region -> district;
+                    }                   
+                }
+                else{
+                    $new_region = $region -> region;
+                    if ($new_district != $region -> district) {
+                        $new_arr->$new_region[] = $region -> district;
+                        $new_district = $region -> district;
+                    }
+                }
+            }
+
+		return $new_arr;
 
 	}
 }

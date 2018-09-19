@@ -82,6 +82,7 @@
 								{!! Form::text('contact_person',$seller->contact_person,['class' => 'form-control'])!!}
 							</div>
 						</div>
+						@if($object != 'fermeri')
 						<div class="form-group">
 							<p>Продукция:</p>
 							<div class="col-md-8">
@@ -94,6 +95,40 @@
 								@endforeach							
 							</div>
 						</div>
+						@else
+						<div class="form-group">
+							{!! Form::label('region','Область',['class' => 'col-md-2 control-label'])   !!}
+							<div class="col-md-8">
+								{!! Form::text('region',$seller->region,['class' => 'form-control'])!!}
+							</div>
+						</div>
+						<div class="form-group">
+							{!! Form::label('district','Район',['class' => 'col-md-2 control-label'])   !!}
+							<div class="col-md-8">
+								{!! Form::text('district',$seller->district,['class' => 'form-control'])!!}
+							</div>
+						</div>
+						<div class="form-group">
+							<p>Продукция:</p>
+							<div class="col-md-8">
+								@if(!empty(json_decode($seller->products)))								
+								
+								@for ($i=0; $i < count($farm_product); $i++)
+								@if(array_search($farm_product[$i], json_decode($seller->products)) !== false)
+                                        <p>{!! Form::checkbox('farm_product[]', $farm_product[$i], true) !!}{{$farm_product[$i]}}</p>
+                                @else
+                                		<p>{!! Form::checkbox('farm_product[]', $farm_product[$i]) !!}{{$farm_product[$i]}}</p>
+                                @endif		                                		         
+                                @endfor	
+
+                                @else
+								@for ($i=0; $i < count($farm_product); $i++)
+										<p>{!! Form::checkbox('farm_product[]', $farm_product[$i]) !!}{{$farm_product[$i]}}</p>
+								@endfor
+								@endif						
+							</div>
+						</div>
+						@endif
 
 						{!! Form::button('Сохранить',['class'=>'btn btn-primary','type'=>'submit']) !!}
 						{!! Form::close() !!}

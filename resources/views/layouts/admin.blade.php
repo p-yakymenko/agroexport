@@ -26,6 +26,20 @@
 
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 
+    <style type="text/css">
+        #farms .dropdown-submenu{
+            left: -30%;
+        }
+        #farms .dropdown-submenu>.dropdown-menu{
+            position: relative;
+            left: 30%;
+            background-color: #212529;
+        }  
+        #farms .dropdown-submenu:hover>.dropdown-menu{
+            display: block;
+        }
+    </style>
+
 </head>
 <body>
     @can('update-post')
@@ -78,17 +92,19 @@
                         </ul>
                     </li>
                     
-                    <li class="menu-item-has-children dropdown">
+                    <li class="menu-item-has-children dropdown" id="farms">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Фермеры </a>
                         <ul class="sub-menu children dropdown-menu">
 
                             @if(isset($region_arr) && is_object($region_arr))
                             @foreach($region_arr as $k=>$region)
-                            <li class="menu-item-has-children dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{$k}}</a>
-                                <ul class="sub-menu children dropdown-menu">
+                            <li class="dropdown-submenu">
+                                <a href="#">{{$k}}</a>
+                                <ul class="dropdown-menu">
                                     @for($i=0; $i < count($region); $i++)
-                                    <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Фермеры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($k, ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($region[$i], ['type' => 'url', 'lowercase' => true])) }}">{{$region[$i]}}</a></li>
+                                    <li>
+                                        <a href="{{ url('/admin/sellers/'.Transliterate::make( 'Фермеры', ['type' => 'url', 'lowercase' => true]).'/'.$k.'/'.$region[$i]) }}">{{$region[$i]}}</a>
+                                    </li>
                                     @endfor
                                 </ul>
                             </li>                                                 

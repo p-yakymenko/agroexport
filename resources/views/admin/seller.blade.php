@@ -46,13 +46,26 @@
 						<p>{{ $seller->activity_type }}</p>
 						<strong class="card-title">Контактное лицо:</strong>
 						<p>{{ $seller->contact_person }}</p>
+						@if($object != 'fermeri')
 						<strong class="card-title">Продукция:</strong>
 						@foreach ($products as $product)
 						@if(array_search($product->name, $seller->arrayCatNames) !== false)
 						<p>{{ $product->name }}</p>
-						@endif
+                        @endif
 						@endforeach
-						@endif					
+						@else
+						<strong class="card-title">Область:</strong>
+						<p>{{ $seller->region }}</p>
+						<strong class="card-title">Район:</strong>
+						<p>{{ $seller->district }}</p>
+						<strong class="card-title">Продукция:</strong>
+						@for ($i=0; $i < count(json_decode($seller->products)); $i++)
+						<p>{{json_decode($seller->products)[$i]}}</p>               
+                        @endfor
+                        @endif
+						@endif						
+						
+											
 					
 					</div>
 				</div>

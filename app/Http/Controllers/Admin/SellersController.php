@@ -12,10 +12,11 @@ class SellersController extends AdminController
 {
 
     //параметр object это тип продавца
-    public function index($object = null, $product = null)
+    public function index($object = null, $product = null, $district = null)
     {
 
         $products = ProductCategories::all();
+        $region_arr = parent::getRegionArr('fermeri');
 
         if ($object != 'fermeri' ) {
 
@@ -120,43 +121,19 @@ class SellersController extends AdminController
             }
 
             
-            return view('admin.sellers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object]); 
+            return view('admin.sellers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr]); 
         }
         else{
 
-            $sellers = DB::table(parent::tableName($object).'s')->paginate(10);
-            $title = 'Список '.parent::translitFunc($object);
-            $region_arr = DB::table(parent::tableName($object).'s')
-            ->select('region', 'district')
-            ->orderBy('region')
-            ->get();
-
-            //создаем массив регионов
-            foreach ($region_arr as $region) {
-                $new_region = $region -> region;
-                break;
-            }
-            $new_district = '';
-
-            foreach ($region_arr as $region) {                
-                if ($new_region == $region -> region) {
-                    if ($new_district != $region -> district) {
-                        $new_arr->$new_region[] = $region -> district;
-                        $new_district = $region -> district;
-                    }                   
-                }
-                else{
-                    $new_region = $region -> region;
-                    if ($new_district != $region -> district) {
-                        $new_arr->$new_region[] = $region -> district;
-                        $new_district = $region -> district;
-                    }
-                }
-            }
+            $sellers = DB::table(parent::tableName($object).'s')
+            ->where('region', $product)
+            ->where('district', $district)
+            ->paginate(10);
+            $title = 'Список '.parent::translitFunc($object);            
 
             /*echo '<pre>'. print_r($new_arr,true).'</pre>';
             die();*/
-            return view('admin.farmers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $new_arr]);
+            return view('admin.farmers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr]);
         }
 
     }
@@ -166,107 +143,136 @@ class SellersController extends AdminController
     {
         $products = ProductCategories::all();
         $title = 'Добавление '. parent::translitFunc($object);
-        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'object' =>  $object ]);
+        $region_arr = parent::getRegionArr('fermeri');
+        $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
+        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product ]);
     }
 
 
     public function add(Request $request, $object)
     {
         $products = ProductCategories::all();
-        $arrayCatNames = $request->input('arrayCatNames');
-        $new_seller = parent::objectsFunc($object);
-        $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person'];
+        $region_arr = parent::getRegionArr('fermeri');       
         
-        foreach($fields as $field){
-            $new_seller->$field = $request->input($field);
-        }
+        if ($object != 'fermeri' ){
+            
+            $arrayCatNames = $request->input('arrayCatNames');
+            $new_seller = parent::objectsFunc($object);
+            $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person'];
 
-        for ($i=0; $i < count($arrayCatNames); $i++) { 
-            foreach ($products as $product) {
-                if ($arrayCatNames[$i] == $product->name) {
-                    $arrayCategories[] = $product->id;
+            foreach($fields as $field){
+                $new_seller->$field = $request->input($field);
+            }
+
+            for ($i=0; $i < count($arrayCatNames); $i++) { 
+                foreach ($products as $product) {
+                    if ($arrayCatNames[$i] == $product->name) {
+                        $arrayCategories[] = $product->id;
+                    }
                 }
             }
-        }
-        
-        if ($new_seller->save()) {
-            $message = 'Запись успешно сохранена!';
-        }
-        $id = DB::getPdo()->lastInsertId();
 
-        for ($i=0; $i < count($arrayCategories); $i++) { 
-            DB::table(parent::tableName($object).'s_to_product_categories')
-            ->insert([parent::tableName($object).'_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
+            if ($new_seller->save()) {
+                $message = 'Запись успешно сохранена!';
+            }
+            $id = DB::getPdo()->lastInsertId();
+
+            for ($i=0; $i < count($arrayCategories); $i++) { 
+                DB::table(parent::tableName($object).'s_to_product_categories')
+                ->insert([parent::tableName($object).'_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
+            }
+        
         }
+        else{
+
+            $farm_product = $request->input('farm_product');
+            $new_seller = parent::objectsFunc($object);
+            $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person', 'region', 'district'];
+
+            foreach($fields as $field){
+                $new_seller->$field = $request->input($field);
+            }
+
+            $json = json_encode($farm_product,JSON_UNESCAPED_UNICODE);
+
+            $new_seller->products = $json;
+
+            if ($new_seller->save()) {
+                $message = 'Запись успешно сохранена!';
+            }
+        }
+
+        $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
 
         $title = 'Добавление '. parent::translitFunc($object);
-        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'message' =>  $message, 'object' =>  $object ]);
+        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'message' =>  $message, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product ]);
     }
 
     
     public function show($object, $id)
     {
         $products = ProductCategories::all();
-        $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
+        $region_arr = parent::getRegionArr('fermeri');
+        $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
+        
         $seller = parent::objectsOne($object, $id);
         $title = 'Изменение '. parent::translitFunc($object).' '.$seller->name;
+
+        if ($object != 'fermeri' ){
+
+            $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
+                
+                if ($object == 'eksportyori') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->exporter_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'importyori') {              
+                    foreach ($objCategories as $category) {
+                        if ($category->importer_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'proizvoditeli') {               
+                    foreach ($objCategories as $category) {
+                        if ($category->manufacturer_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'elevatori') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->elevator_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'perevozchiki') {               
+                    foreach ($objCategories as $category) {
+                        if ($category->carrier_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
         
-        if ($object == 'eksportyori') {             
-            foreach ($objCategories as $category) {
-                if ($category->exporter_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'importyori') {              
-            foreach ($objCategories as $category) {
-                if ($category->importer_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'fermeri') {             
-            foreach ($objCategories as $category) {
-                if ($category->farm_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'proizvoditeli') {               
-            foreach ($objCategories as $category) {
-                if ($category->manufacturer_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'elevatori') {             
-            foreach ($objCategories as $category) {
-                if ($category->elevator_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'perevozchiki') {               
-            foreach ($objCategories as $category) {
-                if ($category->carrier_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-
-
-        $seller->arrayCategories = $arrayCategories;
         
-        for ($i=0; $i < count($seller->arrayCategories); $i++) { 
-            foreach ($products as $product) {
-                if ($seller->arrayCategories[$i] == $product->id) {
-                    $arrayCatNames[$i] = $product->name;
-                }
-            }
-        }               
-        $seller->arrayCatNames = $arrayCatNames;
+                $seller->arrayCategories = $arrayCategories;
+                
+                for ($i=0; $i < count($seller->arrayCategories); $i++) { 
+                    foreach ($products as $product) {
+                        if ($seller->arrayCategories[$i] == $product->id) {
+                            $arrayCatNames[$i] = $product->name;
+                        }
+                    }
+                }               
+                $seller->arrayCatNames = $arrayCatNames;
 
-        return view('admin.sellers_update', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object ]);
+            }
+
+        return view('admin.sellers_update', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product ]);
     }
 
     /**
@@ -279,49 +285,79 @@ class SellersController extends AdminController
     public function update(Request $request, $object, $id)
     {
         $products = ProductCategories::all();
-        $arrayCatNames = $request->input('arrayCatNames');
+        $region_arr = parent::getRegionArr('fermeri');
+        $arrayCatNames = $request->input('arrayCatNames');       
         
         $seller_to_be_updated = parent::objectsOne($object, $id);
-        $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person'];
 
-        foreach($fields as $field){
-            $seller_to_be_updated->$field = $request->input($field);
-        }
-
-        for ($i=0; $i < count($arrayCatNames); $i++) { 
-            foreach ($products as $product) {
-                if ($arrayCatNames[$i] == $product->name) {
-                    $arrayCategories[] = $product->id;
+        if ($object != 'fermeri' ){
+                
+                $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person'];
+        
+                foreach($fields as $field){
+                    $seller_to_be_updated->$field = $request->input($field);
                 }
+        
+                for ($i=0; $i < count($arrayCatNames); $i++) { 
+                    foreach ($products as $product) {
+                        if ($arrayCatNames[$i] == $product->name) {
+                            $arrayCategories[] = $product->id;
+                        }
+                    }
+                }
+                
+                DB::table(parent::tableName($object).'s_to_product_categories')
+                ->where(parent::tableName($object).'_id', '=', $id)
+                ->delete();
+                for ($i=0; $i < count($arrayCategories); $i++) { 
+                    DB::table(parent::tableName($object).'s_to_product_categories')
+                    ->insert([parent::tableName($object).'_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
+                }
+        
+                
+                if ($seller_to_be_updated->save()) {
+                    $message = 'Запись успешно сохранена!';
+                }
+        
+                $seller_to_be_updated->arrayCatNames = $arrayCatNames;
+            
             }
-        }
-        
-        DB::table(parent::tableName($object).'s_to_product_categories')
-        ->where(parent::tableName($object).'_id', '=', $id)
-        ->delete();
-        for ($i=0; $i < count($arrayCategories); $i++) { 
-            DB::table(parent::tableName($object).'s_to_product_categories')
-            ->insert([parent::tableName($object).'_id' => $id, 'product_category_id' => $arrayCategories[$i]]);
-        }
+            else{
 
-        
-        if ($seller_to_be_updated->save()) {
-            $message = 'Запись успешно сохранена!';
-        }
+                $farm_product = $request->input('farm_product');
 
-        $seller_to_be_updated->arrayCatNames = $arrayCatNames;
+                $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person', 'region', 'district'];
+
+                foreach($fields as $field){
+                    $seller_to_be_updated->$field = $request->input($field);
+                }
+
+                $json = json_encode($farm_product,JSON_UNESCAPED_UNICODE);
+
+                $seller_to_be_updated->products = $json;
+
+                if ($seller_to_be_updated->save()) {
+                    $message = 'Запись успешно сохранена!';
+                }
+
+            }
+
+        $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
         
         $title = 'Изменение '.parent::translitFunc($object).' '.$seller_to_be_updated->name;
-        return view('admin.sellers_update', ['title' => $title,'seller' => $seller_to_be_updated,'products' => $products, 'message' =>  $message, 'object' =>  $object]);
+        return view('admin.sellers_update', ['title' => $title,'seller' => $seller_to_be_updated,'products' => $products, 'message' =>  $message, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product]);
     }
 
 
     public function destroy(Request $request, $object)
     {
         $id = $request->input('action');
-        DB::table(parent::tableName($object).'s_to_product_categories')
-        ->where(parent::tableName($object).'_id', '=', $id)
-        ->delete();
+        
+        if ($object != 'fermeri' ){               
+                DB::table(parent::tableName($object).'s_to_product_categories')
+                ->where(parent::tableName($object).'_id', '=', $id)
+                ->delete();
+            }
         
         DB::table(parent::tableName($object).'s')
         ->where('id', '=', $id)
@@ -334,67 +370,68 @@ class SellersController extends AdminController
     public function showSeller($object, $id)
     {
         $products = ProductCategories::all();
-        $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
+        $region_arr = parent::getRegionArr('fermeri');
+        $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
+        
         $seller = parent::objectsOne($object, $id);
         $title = 'Подробная информация об '.parent::translitFunc($object).' '.$seller->name;
-        $arrayCategories = array();
-        $arrayCatNames = array();
 
-        if ($object == 'eksportyori') {             
-            foreach ($objCategories as $category) {
-                if ($category->exporter_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'importyori') {              
-            foreach ($objCategories as $category) {
-                if ($category->importer_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'fermeri') {             
-            foreach ($objCategories as $category) {
-                if ($category->farm_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'proizvoditeli') {               
-            foreach ($objCategories as $category) {
-                if ($category->manufacturer_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'elevatori') {             
-            foreach ($objCategories as $category) {
-                if ($category->elevator_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
-        elseif ($object == 'perevozchiki') {               
-            foreach ($objCategories as $category) {
-                if ($category->carrier_id == $seller->id) {
-                    $arrayCategories[] = $category->product_category_id;
-                }
-            }
-        }
+        if ($object != 'fermeri' ){
 
-        $seller->arrayCategories = $arrayCategories;
+            $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
+                
+                $arrayCategories = array();
+                $arrayCatNames = array();
         
-        for ($i=0; $i < count($seller->arrayCategories); $i++) { 
-            foreach ($products as $product) {
-                if ($seller->arrayCategories[$i] == $product->id) {
-                    $arrayCatNames[$i] = $product->name;
+                if ($object == 'eksportyori') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->exporter_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
                 }
+                elseif ($object == 'importyori') {              
+                    foreach ($objCategories as $category) {
+                        if ($category->importer_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'proizvoditeli') {               
+                    foreach ($objCategories as $category) {
+                        if ($category->manufacturer_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'elevatori') {             
+                    foreach ($objCategories as $category) {
+                        if ($category->elevator_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+                elseif ($object == 'perevozchiki') {               
+                    foreach ($objCategories as $category) {
+                        if ($category->carrier_id == $seller->id) {
+                            $arrayCategories[] = $category->product_category_id;
+                        }
+                    }
+                }
+        
+                $seller->arrayCategories = $arrayCategories;
+                
+                for ($i=0; $i < count($seller->arrayCategories); $i++) { 
+                    foreach ($products as $product) {
+                        if ($seller->arrayCategories[$i] == $product->id) {
+                            $arrayCatNames[$i] = $product->name;
+                        }
+                    }
+                }               
+                $seller->arrayCatNames = $arrayCatNames;
             }
-        }               
-        $seller->arrayCatNames = $arrayCatNames;
 
-        return view('admin.seller', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object ]);
+        return view('admin.seller', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product ]);
     }
 
 
