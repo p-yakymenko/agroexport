@@ -38,6 +38,9 @@
         #farms .dropdown-submenu:hover>.dropdown-menu{
             display: block;
         }
+        #farms > ul.sub-menu.children.dropdown-menu{
+            max-height: max-content;
+        }
     </style>
 
 </head>
