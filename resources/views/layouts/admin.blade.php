@@ -28,11 +28,11 @@
 
     <style type="text/css">
         #farms .dropdown-submenu{
-            left: -30%;
+            left: -25%;
         }
         #farms .dropdown-submenu>.dropdown-menu{
             position: relative;
-            left: 30%;
+            left: 10%;
             background-color: #212529;
         }  
         #farms .dropdown-submenu:hover>.dropdown-menu{
