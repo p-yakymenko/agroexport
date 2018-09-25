@@ -128,6 +128,7 @@ class SellersController extends AdminController
             $sellers = DB::table(parent::tableName($object).'s')
             ->where('region', $product)
             ->where('district', $district)
+            ->orderBy('name')
             ->paginate(10);
             $title = 'Список '.parent::translitFunc($object);            
 
