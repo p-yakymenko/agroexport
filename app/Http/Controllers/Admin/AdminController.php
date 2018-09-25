@@ -105,7 +105,7 @@ class AdminController extends Controller
 	}
 
 
-	protected function getRegionArr($object){
+	protected function getRegionArr($object){		
 
 		$new_arr = (object)[];
 		$district_name = array();
@@ -115,7 +115,7 @@ class AdminController extends Controller
 		->orderBy('region')
 		->get();
 
-            //создаем массив регионов
+        //создаем массив регионов
 		foreach ($region_arr as $region) {
 			$new_region = $region -> region;
 			break;
@@ -141,10 +141,50 @@ class AdminController extends Controller
 						$new_district = $region -> district;
 					}
 				}
-			}
+			}						
 		}
 
-		return $new_arr;
+		//сортируем массив регионов согласно укр. алфавиту
+		$sort_arr = (object)[];
+
+		foreach ($new_arr as $k => $value) {
+			
+			if (!empty($value)) {
+				
+				usort($value, function ($a, $b){
+					$status = 0;
+					$a = mb_strtoupper ( $a, 'UTF-8' );
+					$b = mb_strtoupper ( $b, 'UTF-8' );
+					$alphabet = array(
+						'А' => 1, 'Б' => 2, 'В' => 3, 'Г' => 4, 'Д' => 5, 'Е' => 6, 'Є' => 7, 'Ж' => 8, 'З' => 9, 'И' => 10, 'І' => 11,
+						'Ї' => 12, 'Й' => 13, 'К' => 14, 'Л' => 15, 'М' => 16, 'Н' => 17, 'О' => 18, 'П' => 19, 'Р' => 20, 'С' => 21, 'Т' => 22,
+						'У' => 23, 'Ф' => 24, 'Х' => 25, 'Ц' => 26, 'Ч' => 27, 'Ш' => 28, 'Щ' => 29, 'Ь' => 30, 'Ю' => 31, 'Я' => 32
+					);
+					$lengthA = mb_strlen ( $a, 'UTF-8' );
+					$lengthB = mb_strlen ( $b, 'UTF-8' );
+					for( $i = 0; $i < ( $lengthA > $lengthB? $lengthB : $lengthA ); $i++ ){
+						if ( $alphabet[ mb_substr( $a, $i, 1, 'UTF-8' ) ] < $alphabet[ mb_substr( $b, $i, 1, 'UTF-8' ) ] ){
+							$status = -1;
+							break;
+						}
+						elseif ( $alphabet[ mb_substr( $a, $i, 1, 'UTF-8' ) ] > $alphabet[ mb_substr( $b, $i, 1, 'UTF-8' ) ] ){
+							$status = 1;
+							break;
+						}
+						else{
+							$status = 0;
+						}
+					}
+					return $status;
+				});				
+			
+			}
+			$sort_arr->$k = $value;
+		}
+
+		return $sort_arr;
 
 	}
+
+
 }
