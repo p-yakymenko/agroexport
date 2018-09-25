@@ -163,21 +163,24 @@ class AdminController extends Controller
 					$lengthA = mb_strlen ( $a, 'UTF-8' );
 					$lengthB = mb_strlen ( $b, 'UTF-8' );
 					for( $i = 0; $i < ( $lengthA > $lengthB? $lengthB : $lengthA ); $i++ ){
-						if ( $alphabet[ mb_substr( $a, $i, 1, 'UTF-8' ) ] < $alphabet[ mb_substr( $b, $i, 1, 'UTF-8' ) ] ){
-							$status = -1;
-							break;
-						}
-						elseif ( $alphabet[ mb_substr( $a, $i, 1, 'UTF-8' ) ] > $alphabet[ mb_substr( $b, $i, 1, 'UTF-8' ) ] ){
-							$status = 1;
-							break;
-						}
-						else{
-							$status = 0;
+						if (!empty(mb_substr( $a, $i, 1, 'UTF-8' )) AND !empty(mb_substr( $b, $i, 1, 'UTF-8' ))) {
+							
+							if ( $alphabet[ mb_substr( $a, $i, 1, 'UTF-8' ) ] < $alphabet[ mb_substr( $b, $i, 1, 'UTF-8' ) ] ){
+								$status = -1;
+								break;
+							}
+							elseif ( $alphabet[ mb_substr( $a, $i, 1, 'UTF-8' ) ] > $alphabet[ mb_substr( $b, $i, 1, 'UTF-8' ) ] ){
+								$status = 1;
+								break;
+							}
+							else{
+								$status = 0;
+							}
 						}
 					}
 					return $status;
 				});				
-			
+
 			}
 			$sort_arr->$k = $value;
 		}
