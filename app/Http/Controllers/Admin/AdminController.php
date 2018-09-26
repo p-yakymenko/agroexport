@@ -165,6 +165,12 @@ class AdminController extends Controller
 					for( $i = 0; $i < ( $lengthA > $lengthB? $lengthB : $lengthA ); $i++ ){
 						if (!empty(mb_substr( $a, $i, 1, 'UTF-8' )) AND !empty(mb_substr( $b, $i, 1, 'UTF-8' ))) {
 							
+							// КОСТЫЛЬ
+							if(mb_substr( $a, $i, 1, 'UTF-8' ) == "'" || mb_substr( $b, $i, 1, 'UTF-8' ) == "'" || mb_substr( $a, $i, 1, 'UTF-8' ) == "." || mb_substr( $b, $i, 1, 'UTF-8' ) == "."){
+								return 0;
+							}
+							// end костыль
+							
 							if ( $alphabet[ mb_substr( $a, $i, 1, 'UTF-8' ) ] < $alphabet[ mb_substr( $b, $i, 1, 'UTF-8' ) ] ){
 								$status = -1;
 								break;
