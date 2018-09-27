@@ -19,7 +19,8 @@ class SellersController extends AdminController
         $region_arr = parent::getRegionArr('fermeri');
         $sellers = (object)[];
         $title = 'Список '.parent::translitFunc($object);
-        $id_product = '';
+        $id_product = 0;
+        $our_product = '';
 
         if ($object != 'fermeri' ) {
 
