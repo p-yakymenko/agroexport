@@ -17,9 +17,13 @@ class SellersController extends AdminController
 
         $products = ProductCategories::all();
         $region_arr = parent::getRegionArr('fermeri');
+        $sellers = (object)[];
+        $title = 'Список '.parent::translitFunc($object);
 
         if ($object != 'fermeri' ) {
 
+            if ($product != null) {
+                            
             //выясняем id и имя продукта     
             foreach ($products as $value) {
                 if (Transliterate::make($value->name, ['type' => 'url', 'lowercase' => true]) == $product) {
@@ -120,7 +124,7 @@ class SellersController extends AdminController
                 $seller->arrayCatNames = $arrayCatNames;
             }
 
-            
+        }   
             return view('admin.sellers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr]); 
         }
         else{
@@ -129,8 +133,7 @@ class SellersController extends AdminController
             ->where('region', $product)
             ->where('district', $district)
             ->orderBy('name')
-            ->paginate(10);
-            $title = 'Список '.parent::translitFunc($object);            
+            ->paginate(10);            
 
             /*echo '<pre>'. print_r($new_arr,true).'</pre>';
             die();*/
