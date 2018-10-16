@@ -13,7 +13,7 @@ class ProductCategoriesController extends AdminController
 	{
 		$title = 'Список продукции';
 		$region_arr = parent::getRegionArr('fermeri');
-		$products = ProductCategories::all();
+		$products = ProductCategories::all()->sortBy("name");
 
 		return view('admin.product_categories', ['title' => $title,'products' => $products, 'region_arr' =>  $region_arr ]);
 

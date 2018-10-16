@@ -14,7 +14,7 @@ class RolesController extends AdminController
 {
 	public function index(){
 
-		$products = ProductCategories::all();
+		$products = ProductCategories::all()->sortBy("name");
 		$region_arr = parent::getRegionArr('fermeri');
 		$title = 'Пользователи';
 		$users = DB::select('select * from users');
@@ -24,7 +24,7 @@ class RolesController extends AdminController
 
 	public function showAdd()
 	{
-		$products = ProductCategories::all();
+		$products = ProductCategories::all()->sortBy("name");
 		$region_arr = parent::getRegionArr('fermeri');
 		$title = 'Добавление пользователя';
 		return view('admin.user_add', ['title' => $title, 'products' =>  $products, 'region_arr' =>  $region_arr]);
@@ -51,7 +51,7 @@ class RolesController extends AdminController
 	public function show($id)
 	{
 		
-		$products = ProductCategories::all();
+		$products = ProductCategories::all()->sortBy("name");
 		$region_arr = parent::getRegionArr('fermeri');
 		$user = User::find($id);
 		$title = 'Изменение пользователя '.$user->name;

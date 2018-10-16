@@ -15,7 +15,7 @@ class IndexController extends AdminController
     {
         $title = 'Весь список';
         $objects = array();
-        $products = ProductCategories::all();
+        $products = ProductCategories::all()->sortBy("name");
         $sellers = Exporters::all();
         $objCategories = DB::select('select * from exporters_to_product_categories');
         foreach ($sellers as $seller) {
@@ -141,7 +141,7 @@ class IndexController extends AdminController
 
     public function index(){
 
-        $products = ProductCategories::all();
+        $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $title = 'Пользователи';
         $users = DB::select('select * from users');

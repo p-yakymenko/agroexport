@@ -15,7 +15,7 @@ class ImportExcelController extends AdminController
     //параметр object это тип продавца
 	public function index($object = null) {
 		
-		$products = ProductCategories::all();
+		$products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $title = 'Импорт из Excel '. parent::translitFunc($object);
 
@@ -36,12 +36,12 @@ class ImportExcelController extends AdminController
             die();
         }
 
-        $products = ProductCategories::all();
+        $products = ProductCategories::all()->sortBy("name");
         $result = false;
         $seller_name_arr = array();
 
         foreach($sellers as $seller) {
-            $seller_name_arr[] = $seller -> name;
+            $seller_name_arr[] = mb_strtoupper(trim($seller -> name));
         }
 
         $excel = App::make('excel');
@@ -102,7 +102,8 @@ class ImportExcelController extends AdminController
             foreach($value_arr as $value) {
                 if (!empty($value[$key_array[0]])) {
                     //проверяем наличие продавца, если есть - то не дублируем
-                    if (!in_array($value[$key_array[0]], $seller_name_arr)) {
+                    if (!in_array(mb_strtoupper(trim($value[$key_array[0]])), $seller_name_arr)) {
+                        $seller_name_arr[] = mb_strtoupper(trim($value[$key_array[0]]));
                         $new_seller = parent::objectsFunc($object);
                         for ($i = 0; $i < count($fields); $i++) {
                             if ($value[$key_array[$i]]) {
@@ -170,7 +171,7 @@ class ImportExcelController extends AdminController
                 }
 
             //выясняем id и имя продукта 
-                $products = ProductCategories::all();
+                $products = ProductCategories::all()->sortBy("name");
                 foreach($products as $value) {
                     if ($value -> name == $name_file) {
                         $our_product = $value -> name;
@@ -325,10 +326,10 @@ class ImportExcelController extends AdminController
             foreach ($value_arr as $uploaded_entry){
 
                 //проверяем наличие продавца, если есть - то не дублируем
-                if (!in_array($uploaded_entry[$key_array[3]], $seller_name_arr)) {
+                if (!in_array(mb_strtoupper(trim($uploaded_entry[$key_array[3]])), $seller_name_arr)) {
                     $new_seller = parent::objectsFunc($object);
 
-                    $seller_name_arr[] = $uploaded_entry[$key_array[3]];
+                    $seller_name_arr[] = mb_strtoupper(trim($uploaded_entry[$key_array[3]]));
 
                     $new_seller['name'] = $uploaded_entry[$key_array[3]];
                     $new_seller['address'] = $uploaded_entry[$key_array[9]];

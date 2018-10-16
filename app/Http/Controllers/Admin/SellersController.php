@@ -15,13 +15,14 @@ class SellersController extends AdminController
     public function index($object = null, $product = null, $district = null)
     {
 
-        $products = ProductCategories::all();
+        $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $sellers = (object)[];
         $title = 'Список '.parent::translitFunc($object);
         $id_product = 0;
         $our_product = '';
 
+       
         if ($object != 'fermeri' ) {
 
             if ($product != null) {
@@ -58,9 +59,33 @@ class SellersController extends AdminController
                     $new_sellers[] = $value->carrier_id; 
                 }            
             }
-            
-            
-            $sellers = DB::table(parent::tableName($object).'s')->whereIn('id', $new_sellers)->paginate(10);        
+
+            //очистка от дублей
+            $sellers = parent::objectsAll($object);
+
+             /*echo '<pre>'. print_r($sellers,true).'</pre>';
+            die();*/
+
+            $seller_name_arr = array();
+
+            foreach($sellers as $seller) {
+                if (in_array(mb_strtoupper(trim($seller -> name)), $seller_name_arr)) {
+               
+                DB::table(parent::tableName($object).'s_to_product_categories')
+                ->where(parent::tableName($object).'_id', '=', $seller -> id)
+                ->delete();
+        
+                DB::table(parent::tableName($object).'s')
+                ->where('id', '=', $seller -> id)
+                ->delete();
+                
+                }
+                $seller_name_arr[] = mb_strtoupper(trim($seller -> name));
+            } 
+            //end очистка от дублей
+                       
+            $sellers = DB::table(parent::tableName($object).'s')->whereIn('id', $new_sellers)->orderBy('name')->paginate(10);  
+                 
             
             $title = 'Список '.parent::translitFunc($object).' '.$our_product;
             $objCategories = DB::select('select * from '.parent::tableName($object).'s_to_product_categories');
@@ -137,8 +162,7 @@ class SellersController extends AdminController
             ->orderBy('name')
             ->paginate(10);            
 
-            /*echo '<pre>'. print_r($new_arr,true).'</pre>';
-            die();*/
+            
             return view('admin.farmers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr]);
         }
 
@@ -147,7 +171,7 @@ class SellersController extends AdminController
     
     public function showAdd($object)
     {
-        $products = ProductCategories::all();
+        $products = ProductCategories::all()->sortBy("name");
         $title = 'Добавление '. parent::translitFunc($object);
         $region_arr = parent::getRegionArr('fermeri');
         $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
@@ -157,7 +181,7 @@ class SellersController extends AdminController
 
     public function add(Request $request, $object)
     {
-        $products = ProductCategories::all();
+        $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');       
         
         if ($object != 'fermeri' ){
@@ -217,7 +241,7 @@ class SellersController extends AdminController
     
     public function show($object, $id)
     {
-        $products = ProductCategories::all();
+        $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
         
@@ -290,7 +314,7 @@ class SellersController extends AdminController
      */
     public function update(Request $request, $object, $id)
     {
-        $products = ProductCategories::all();
+        $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $arrayCatNames = $request->input('arrayCatNames');       
         
@@ -375,7 +399,7 @@ class SellersController extends AdminController
 
     public function showSeller($object, $id)
     {
-        $products = ProductCategories::all();
+        $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
         

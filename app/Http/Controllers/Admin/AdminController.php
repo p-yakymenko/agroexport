@@ -117,33 +117,34 @@ class AdminController extends Controller
 
         //создаем массив регионов
 		foreach ($region_arr as $region) {
-			$new_region = $region -> region;
+			$new_region = mb_strtoupper(trim($region -> region));
 			break;
 		}
 		$new_district = '';
 
 		foreach ($region_arr as $region) {                
-			if ($new_region == $region -> region) {
-				if ($new_district != $region -> district) {
-					if (!in_array($region -> district, $district_name)){
-						$district_name[] = $region -> district;
-						$new_arr->$new_region[] = $region -> district;
-						$new_district = $region -> district;
+			if ($new_region == mb_strtoupper(trim($region -> region))) {
+				if (mb_strtoupper(trim($new_district)) != mb_strtoupper(trim($region -> district))) {
+					if (!in_array(mb_strtoupper(trim($region -> district)), $district_name)){
+						$district_name[] = mb_strtoupper(trim($region -> district));
+						$new_arr->$new_region[] = mb_strtoupper(trim($region -> district));
+						$new_district = mb_strtoupper(trim($region -> district));
 					}
 				}                   
 			}
 			else{
-				$new_region = $region -> region;
-				if ($new_district != $region -> district) {
-					if (!in_array($region -> district, $district_name)){
-						$district_name[] = $region -> district;
-						$new_arr->$new_region[] = $region -> district;
-						$new_district = $region -> district;
+				$new_region = mb_strtoupper(trim($region -> region));
+				if (mb_strtoupper(trim($new_district)) != mb_strtoupper(trim($region -> district))) {
+					if (!in_array(mb_strtoupper(trim($region -> district)), $district_name)){
+						$district_name[] = mb_strtoupper(trim($region -> district));
+						$new_arr->$new_region[] = mb_strtoupper(trim($region -> district));
+						$new_district = mb_strtoupper(trim($region -> district));
 					}
 				}
 			}						
 		}
-
+/* echo '<pre>'. print_r($new_arr,true).'</pre>';
+            die();*/
 		//сортируем массив регионов согласно укр. алфавиту
 		$sort_arr = (object)[];
 

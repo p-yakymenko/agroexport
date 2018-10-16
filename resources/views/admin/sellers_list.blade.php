@@ -38,8 +38,7 @@
 								<tr>
 									<th>Название, Адрес, Страна</th>
 									<th>Телефон</th>
-									<th>E-mail</th>
-									<th>Сайт</th>
+									<th>E-mail, Сайт</th>
 									<th>Продукция</th>
 									<th>Изменить</th>
 								</tr>
@@ -55,8 +54,9 @@
 										<p>{{$seller->country}}</p>
 									</td>
 									<td>{{$seller->phone}}</td>
-									<td>{{$seller->email}}</td>
-									<td>{{$seller->site}}</td> 
+									<td>{{$seller->email}}
+										<p>{{$seller->site}}</p>
+									</td> 
 									<td>
 										@for($i=0; $i < count($seller->arrayCatNames); $i++)
 										<p>{{$seller->arrayCatNames[$i]}}</p>
