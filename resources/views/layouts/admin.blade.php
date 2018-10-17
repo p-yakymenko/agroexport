@@ -27,24 +27,25 @@
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 
     <style type="text/css">
-        #farms .dropdown-submenu{
-            left: -25%;
-        }
-        #farms .dropdown-submenu>.dropdown-menu{
-            position: relative;
-            left: 10%;
-            background-color: #212529;
-        }  
-        #farms .dropdown-submenu:hover>.dropdown-menu{
-            display: block;
-        }
-        ul.sub-menu.children.dropdown-menu{
-            max-height: max-content;
-        }
-        .right-panel{
-            overflow: hidden;
-        }
-    </style>
+    #farms .dropdown-submenu{
+        left: -25%;
+    }
+    #farms .dropdown-submenu>.dropdown-menu{
+        position: relative;
+        left: 10%;
+        background-color: #212529;
+    }  
+    #farms .dropdown-submenu:hover>.dropdown-menu{
+        display: block;
+    }
+    #farms ul.sub-menu.children.dropdown-menu, .menu-item-has-children.dropdown ul.sub-menu.children.dropdown-menu{
+        max-height: max-content;
+    }
+
+    .right-panel{
+        overflow: hidden;
+    }
+</style>
 
 </head>
 <body>
@@ -260,10 +261,15 @@
     $(document).ready(function() {
       $('#bootstrap-data-table-export').DataTable();
 
-      $('#bootstrap-data-table_wrapper > div:nth-child(3)').hide();
-      $('#bootstrap-data-table_wrapper > div:nth-child(1) > div:nth-child(1)').hide();
-      
-      if ($('.dataTables_empty').text() == 'No data available in table') {
+      var str = document.location.href;
+      if(str.indexOf('sellers') + 1) {
+        $('#bootstrap-data-table_wrapper > div:nth-child(3)').hide();
+        $('#bootstrap-data-table_wrapper > div:nth-child(1) > div:nth-child(1)').hide();
+    }
+
+    $('#bootstrap-data-table_length > label > select > option:nth-child(4)').text('Все');
+
+    if ($('.dataTables_empty').text() == 'No data available in table') {
         $('.dataTables_empty').text('Нет данных');
     }
 

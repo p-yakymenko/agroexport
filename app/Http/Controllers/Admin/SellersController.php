@@ -60,12 +60,12 @@ class SellersController extends AdminController
                 }            
             }
 
-            //очистка от дублей
-            $sellers = parent::objectsAll($object);
-
-             /*echo '<pre>'. print_r($sellers,true).'</pre>';
+            /*echo '<pre>'. print_r($sellers,true).'</pre>';
             die();*/
 
+            //очистка от дублей
+            /*$sellers = parent::objectsAll($object);
+             
             $seller_name_arr = array();
 
             foreach($sellers as $seller) {
@@ -81,7 +81,7 @@ class SellersController extends AdminController
                 
                 }
                 $seller_name_arr[] = mb_strtoupper(trim($seller -> name));
-            } 
+            } */
             //end очистка от дублей
                        
             $sellers = DB::table(parent::tableName($object).'s')->whereIn('id', $new_sellers)->orderBy('name')->paginate(10);  
