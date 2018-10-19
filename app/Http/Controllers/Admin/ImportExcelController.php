@@ -13,13 +13,15 @@ class ImportExcelController extends AdminController
 {
 	
     //параметр object это тип продавца
-	public function index($object = null) {
-		
+	public function index($object = null) 
+    {
+
+		$category_arr = parent::getCategoryArr();
 		$products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $title = 'Импорт из Excel '. parent::translitFunc($object);
 
-        return view('admin.import_excel', ['title' => $title, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr]);
+        return view('admin.import_excel', ['title' => $title, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'category_arr' => $category_arr]);
 
     }
 

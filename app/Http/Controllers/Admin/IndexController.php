@@ -140,11 +140,11 @@ class IndexController extends AdminController
     }*/
 
     public function index(){
-
+        $category_arr = parent::getCategoryArr();
         $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $title = 'Пользователи';
         $users = DB::select('select * from users');
-        return view('admin.users', ['title' => $title,'users' => $users, 'products' =>  $products, 'region_arr' =>  $region_arr]);
+        return view('admin.users', ['title' => $title,'users' => $users, 'products' =>  $products, 'region_arr' =>  $region_arr, 'category_arr' => $category_arr]);
     }
 }

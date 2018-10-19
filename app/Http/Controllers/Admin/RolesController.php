@@ -12,22 +12,24 @@ use DB;
 
 class RolesController extends AdminController
 {
-	public function index(){
-
+	public function index()
+	{
+		$category_arr = parent::getCategoryArr();
 		$products = ProductCategories::all()->sortBy("name");
 		$region_arr = parent::getRegionArr('fermeri');
 		$title = 'Пользователи';
 		$users = DB::select('select * from users');
-		return view('admin.users', ['title' => $title,'users' => $users, 'products' =>  $products, 'region_arr' =>  $region_arr ]);
+		return view('admin.users', ['title' => $title,'users' => $users, 'products' =>  $products, 'region_arr' =>  $region_arr, 'category_arr' => $category_arr ]);
 	}
 
 
 	public function showAdd()
 	{
+		$category_arr = parent::getCategoryArr();
 		$products = ProductCategories::all()->sortBy("name");
 		$region_arr = parent::getRegionArr('fermeri');
 		$title = 'Добавление пользователя';
-		return view('admin.user_add', ['title' => $title, 'products' =>  $products, 'region_arr' =>  $region_arr]);
+		return view('admin.user_add', ['title' => $title, 'products' =>  $products, 'region_arr' =>  $region_arr, 'category_arr' => $category_arr]);
 	}
 
 
@@ -50,13 +52,13 @@ class RolesController extends AdminController
 
 	public function show($id)
 	{
-		
+		$category_arr = parent::getCategoryArr();
 		$products = ProductCategories::all()->sortBy("name");
 		$region_arr = parent::getRegionArr('fermeri');
 		$user = User::find($id);
 		$title = 'Изменение пользователя '.$user->name;
 
-		return view('admin.user_update', ['title' => $title,'user' => $user, 'products' =>  $products, 'region_arr' =>  $region_arr ]);
+		return view('admin.user_update', ['title' => $title,'user' => $user, 'products' =>  $products, 'region_arr' =>  $region_arr, 'category_arr' => $category_arr ]);
 	}
 
 

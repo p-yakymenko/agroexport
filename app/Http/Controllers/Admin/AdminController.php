@@ -10,6 +10,8 @@ use App\Farms;
 use App\Manufacturers;
 use App\Elevators;
 use App\Carriers;
+use App\Categories;
+use App\ProductCategories;
 use DB;
 
 class AdminController extends Controller
@@ -196,5 +198,25 @@ class AdminController extends Controller
 
 	}
 
+
+	protected function getCategoryArr(){		
+
+		$new_arr = (object)[];
+		$cat  = '';
+		$products = ProductCategories::all()->sortBy("name");
+		$categories = Categories::all()->sortBy("name");
+
+		foreach ($categories as $category) {
+			$cat = $category -> name;
+			foreach ($products as $product) {
+				if ($product -> category_id == $category -> id) {
+					$new_arr -> $cat[] = $product -> name;
+				}
+			}
+		}
+
+		return $new_arr;
+
+	}
 
 }

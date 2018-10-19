@@ -27,25 +27,21 @@
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 
     <style type="text/css">
-    #farms .dropdown-submenu{
+    #farms .dropdown-submenu, .category_arr .dropdown-submenu{
         left: -25%;
     }
-    #farms .dropdown-submenu>.dropdown-menu{
+    #farms .dropdown-submenu>.dropdown-menu, .category_arr .dropdown-submenu>.dropdown-menu{
         position: relative;
         left: 10%;
         background-color: #212529;
     }  
-    #farms .dropdown-submenu:hover>.dropdown-menu{
+    #farms .dropdown-submenu:hover>.dropdown-menu, .category_arr .dropdown-submenu:hover>.dropdown-menu{
         display: block;
     }
     #farms ul.sub-menu.children.dropdown-menu, .menu-item-has-children.dropdown ul.sub-menu.children.dropdown-menu{
         max-height: max-content;
     }
-
-    .right-panel{
-        overflow: hidden;
-    }
-</style>
+    </style>
 
 </head>
 <body>
@@ -69,13 +65,22 @@
                     <li class="active">
                         <a href="{{route('adminIndex')}}"> <i class="menu-icon fa fa-dashboard"></i>Панель управления </a>
                     </li>                 
-                    <li class="menu-item-has-children dropdown">
+                    <li class="menu-item-has-children dropdown category_arr">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Экспортёры </a>
                         <ul class="sub-menu children dropdown-menu">
 
-                            @if(isset($products) && is_object($products))
-                            @foreach($products as $product)
-                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Экспортёры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
+                            @if(isset($category_arr) && is_object($category_arr))
+                            @foreach($category_arr as $k=>$product)
+                            <li class="dropdown-submenu">
+                                <a href="#">{{$k}}</a>
+                                <ul class="dropdown-menu">
+                                    @for($i=0; $i < count($product); $i++)
+                                    <li>
+                                        <a href="{{ url('/admin/sellers/'.Transliterate::make( 'Экспортёры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product[$i], ['type' => 'url', 'lowercase' => true])) }}">{{$product[$i]}}</a>
+                                    </li>
+                                    @endfor
+                                </ul>
+                            </li>                                                 
                             @endforeach
                             @endif
                             <li>
@@ -84,13 +89,22 @@
                         </ul>
                     </li>
                     
-                    <li class="menu-item-has-children dropdown">
+                    <li class="menu-item-has-children dropdown category_arr">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Импортёры </a>
                         <ul class="sub-menu children dropdown-menu">
 
-                            @if(isset($products) && is_object($products))
-                            @foreach($products as $product)
-                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Импортёры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
+                            @if(isset($category_arr) && is_object($category_arr))
+                            @foreach($category_arr as $k=>$product)
+                            <li class="dropdown-submenu">
+                                <a href="#">{{$k}}</a>
+                                <ul class="dropdown-menu">
+                                    @for($i=0; $i < count($product); $i++)
+                                    <li>
+                                        <a href="{{ url('/admin/sellers/'.Transliterate::make( 'Импортёры', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product[$i], ['type' => 'url', 'lowercase' => true])) }}">{{$product[$i]}}</a>
+                                    </li>
+                                    @endfor
+                                </ul>
+                            </li>                                                 
                             @endforeach
                             @endif
                             <li>
@@ -126,12 +140,7 @@
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Производители </a>
                         <ul class="sub-menu children dropdown-menu">
-
-                            @if(isset($products) && is_object($products))
-                            @foreach($products as $product)
-                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Производители', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
-                            @endforeach
-                            @endif
+                        
                             <li>
                                 <a href="{{ url('/admin/import-excel/'.Transliterate::make( 'Производители', ['type' => 'url', 'lowercase' => true])) }}"> Импорт из Excel </a>
                             </li> 
@@ -141,12 +150,7 @@
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Элеваторы </a>
                         <ul class="sub-menu children dropdown-menu">
-
-                            @if(isset($products) && is_object($products))
-                            @foreach($products as $product)
-                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Элеваторы', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
-                            @endforeach
-                            @endif
+                        
                             <li>
                                 <a href="{{ url('/admin/import-excel/'.Transliterate::make( 'Элеваторы', ['type' => 'url', 'lowercase' => true])) }}"> Импорт из Excel </a>
                             </li> 
@@ -157,11 +161,6 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user-circle"></i> Перевозчики </a>
                         <ul class="sub-menu children dropdown-menu">
 
-                            @if(isset($products) && is_object($products))
-                            @foreach($products as $product)
-                            <li><a href="{{ url('/admin/sellers/'.Transliterate::make( 'Перевозчики', ['type' => 'url', 'lowercase' => true]).'/'.Transliterate::make($product->name, ['type' => 'url', 'lowercase' => true])) }}">{{$product->name}}</a></li>                                                 
-                            @endforeach
-                            @endif
                             <li>
                                 <a href="{{ url('/admin/import-excel/'.Transliterate::make( 'Перевозчики', ['type' => 'url', 'lowercase' => true])) }}"> Импорт из Excel </a>
                             </li> 
@@ -169,7 +168,10 @@
                     </li>
 
                     <li>
-                        <a href="{{route('adminCategories')}}"><i class="menu-icon fa fa-cubes"></i> Продукты </a>
+                        <a href="{{route('adminProducts')}}"><i class="menu-icon fa fa-cubes"></i> Продукты </a>
+                    </li>
+                    <li>
+                        <a href="{{route('adminCategories')}}"><i class="menu-icon fa fa-cubes"></i> Категории </a>
                     </li>                                     
                     <li>
                         <a href="{{route('adminUsers')}}"><i class="menu-icon fa fa-address-card "></i> Пользователи </a>

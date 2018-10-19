@@ -16,6 +16,7 @@ class SellersController extends AdminController
     {
 
         $products = ProductCategories::all()->sortBy("name");
+        $category_arr = parent::getCategoryArr();
         $region_arr = parent::getRegionArr('fermeri');
         $sellers = (object)[];
         $title = 'Список '.parent::translitFunc($object);
@@ -152,7 +153,7 @@ class SellersController extends AdminController
             }
 
         }   
-            return view('admin.sellers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr]); 
+            return view('admin.sellers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'category_arr' => $category_arr]); 
         }
         else{
 
@@ -163,7 +164,7 @@ class SellersController extends AdminController
             ->paginate(10);            
 
             
-            return view('admin.farmers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr]);
+            return view('admin.farmers', ['title' => $title,'sellers' => $sellers, 'products' =>  $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'category_arr' => $category_arr]);
         }
 
     }
@@ -171,16 +172,18 @@ class SellersController extends AdminController
     
     public function showAdd($object)
     {
+        $category_arr = parent::getCategoryArr();
         $products = ProductCategories::all()->sortBy("name");
         $title = 'Добавление '. parent::translitFunc($object);
         $region_arr = parent::getRegionArr('fermeri');
         $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
-        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product ]);
+        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product, 'category_arr' => $category_arr]);
     }
 
 
     public function add(Request $request, $object)
     {
+        $category_arr = parent::getCategoryArr();
         $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');       
         
@@ -235,12 +238,13 @@ class SellersController extends AdminController
         $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
 
         $title = 'Добавление '. parent::translitFunc($object);
-        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'message' =>  $message, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product ]);
+        return view('admin.sellers_add', ['title' => $title, 'products' => $products, 'message' =>  $message, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product, 'category_arr' => $category_arr ]);
     }
 
     
     public function show($object, $id)
     {
+        $category_arr = parent::getCategoryArr();
         $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
@@ -302,7 +306,7 @@ class SellersController extends AdminController
 
             }
 
-        return view('admin.sellers_update', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product ]);
+        return view('admin.sellers_update', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product , 'category_arr' => $category_arr]);
     }
 
     /**
@@ -314,6 +318,7 @@ class SellersController extends AdminController
      */
     public function update(Request $request, $object, $id)
     {
+        $category_arr = parent::getCategoryArr();
         $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $arrayCatNames = $request->input('arrayCatNames');       
@@ -375,7 +380,7 @@ class SellersController extends AdminController
         $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
         
         $title = 'Изменение '.parent::translitFunc($object).' '.$seller_to_be_updated->name;
-        return view('admin.sellers_update', ['title' => $title,'seller' => $seller_to_be_updated,'products' => $products, 'message' =>  $message, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product]);
+        return view('admin.sellers_update', ['title' => $title,'seller' => $seller_to_be_updated,'products' => $products, 'message' =>  $message, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product, 'category_arr' => $category_arr]);
     }
 
 
@@ -399,6 +404,7 @@ class SellersController extends AdminController
 
     public function showSeller($object, $id)
     {
+        $category_arr = parent::getCategoryArr();
         $products = ProductCategories::all()->sortBy("name");
         $region_arr = parent::getRegionArr('fermeri');
         $farm_product = ['кукуруза зерно','кукуруза кормовая','ячмень озимый','ячмень яровой','гречка','просо','лён','соя','рапс','горох','фасоль','горчица','подсолнечник','овес','пшеница озимая','пшеница яровая'];
@@ -461,7 +467,7 @@ class SellersController extends AdminController
                 $seller->arrayCatNames = $arrayCatNames;
             }
 
-        return view('admin.seller', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product ]);
+        return view('admin.seller', ['title' => $title,'seller' => $seller,'products' => $products, 'object' =>  $object, 'region_arr' =>  $region_arr, 'farm_product' =>  $farm_product , 'category_arr' => $category_arr]);
     }
 
 

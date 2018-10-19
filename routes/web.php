@@ -38,7 +38,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function() {
 
 	Route::get('/seller/{object}/{id}', 'Admin\SellersController@showSeller');
 
-	Route::get('/product-categories',['uses' => 'Admin\ProductCategoriesController@index','as' => 'adminCategories']);
+	Route::get('/product-categories',['uses' => 'Admin\ProductCategoriesController@index','as' => 'adminProducts']);
 
 	Route::get('/product-categories/{id}', 'Admin\ProductCategoriesController@show');
 
@@ -65,5 +65,17 @@ Route::group(['prefix' => 'admin','middleware' => 'auth'],function() {
 	Route::get('/user-add',['uses'=>'Admin\RolesController@showAdd','as'=>'showUser']);
 
 	Route::post('/user-add',['uses'=>'Admin\RolesController@add','as'=>'userAdd']);
+
+	Route::get('/categories',['uses' => 'Admin\CategoriesController@index','as' => 'adminCategories']);
+
+	Route::get('/categories/{id}', 'Admin\CategoriesController@show');
+
+	Route::post('/categories/{id}',['uses'=>'Admin\CategoriesController@update','as'=>'categoryUpdate']);
+
+	Route::post('/categories',['uses' => 'Admin\CategoriesController@destroy','as' => 'deleteCategory']);
+
+	Route::get('/categories-add',['uses'=>'Admin\CategoriesController@showAdd','as'=>'categoryShow']);
+
+	Route::post('/categories-add',['uses'=>'Admin\CategoriesController@add','as'=>'categoryAdd']);
 });
 

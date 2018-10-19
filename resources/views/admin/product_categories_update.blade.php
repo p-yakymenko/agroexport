@@ -41,6 +41,12 @@
 							</div>
 						</div>
 						<div class="form-group">
+							{!! Form::label('category_id','Категория',['class' => 'col-md-2 control-label'])  !!}
+							<div class="col-md-8">
+								{!! Form::select('category_id', $categories, $selected,['class' => 'form-control']) !!}
+							</div>
+						</div>
+						<div class="form-group">
 							{!! Form::label('description','Описание',['class' => 'col-md-2 control-label'])   !!}
 							<div class="col-md-8">
 								{!! Form::text('description',$product->description,['class' => 'form-control'])!!}

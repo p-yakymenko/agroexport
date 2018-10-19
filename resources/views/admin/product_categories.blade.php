@@ -34,6 +34,7 @@
 							<thead>
 								<tr>
 									<th>Название</th>
+									<th>Категория</th>
 									<th>Описание</th>
 									<th>Изменить</th>
 								</tr>
@@ -45,6 +46,7 @@
 								
 								<tr>
 									<td>{{$product->name}}</td>
+									<td>{{$product->category_name}}</td>
 									<td>{{$product->description}}</td>
 									<td>
 										<a class="btn btn-primary" href="{{ url('/admin/product-categories/'.$product->id) }}">Изменить</a>
