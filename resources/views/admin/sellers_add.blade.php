@@ -103,6 +103,12 @@
 							</div>
 						</div>
 						<div class="form-group">
+							{!! Form::label('edrpou','ЄДРПОУ',['class' => 'col-md-2 control-label'])   !!}
+							<div class="col-md-8">
+								{!! Form::text('edrpou',old('edrpou'),['class' => 'form-control'])!!}
+							</div>
+						</div>
+						<div class="form-group">
 							<p>Продукция:</p>
 							<div class="col-md-8">
 								@for ($i=0; $i < count($farm_product); $i++)

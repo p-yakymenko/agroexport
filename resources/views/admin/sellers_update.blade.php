@@ -109,6 +109,12 @@
 							</div>
 						</div>
 						<div class="form-group">
+							{!! Form::label('edrpou','ЄДРПОУ',['class' => 'col-md-2 control-label'])   !!}
+							<div class="col-md-8">
+								{!! Form::text('edrpou',$seller->edrpou,['class' => 'form-control'])!!}
+							</div>
+						</div>
+						<div class="form-group">
 							<p>Продукция:</p>
 							<div class="col-md-8">
 								@if(!empty(json_decode($seller->products)))								

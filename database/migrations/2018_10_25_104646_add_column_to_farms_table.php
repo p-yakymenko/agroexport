@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnToProductCategoriesTable extends Migration
+class AddColumnToFarmsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class AddColumnToProductCategoriesTable extends Migration
      */
     public function up()
     {
-        if (!Schema::hasColumn('product_categories', 'category_id')) {
-            Schema::table('product_categories', function (Blueprint $table) {
-                $table->unsignedInteger('category_id');
+        Schema::table('farms', function (Blueprint $table) {
+                $table->string('edrpou');
             });
-        }
     }
 
     /**
@@ -27,6 +25,8 @@ class AddColumnToProductCategoriesTable extends Migration
      */
     public function down()
     {
-
+        Schema::table('farms', function (Blueprint $table) {
+            //
+        });
     }
 }

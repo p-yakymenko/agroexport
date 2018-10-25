@@ -220,7 +220,7 @@ class SellersController extends AdminController
 
             $farm_product = $request->input('farm_product');
             $new_seller = parent::objectsFunc($object);
-            $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person', 'region', 'district'];
+            $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person', 'region', 'district', 'edrpou'];
 
             foreach($fields as $field){
                 $new_seller->$field = $request->input($field);
@@ -361,7 +361,7 @@ class SellersController extends AdminController
 
                 $farm_product = $request->input('farm_product');
 
-                $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person', 'region', 'district'];
+                $fields = ['name', 'address', 'country', 'phone', 'email', 'site', 'activity_type', 'contact_person', 'region', 'district', 'edrpou'];
 
                 foreach($fields as $field){
                     $seller_to_be_updated->$field = $request->input($field);

@@ -58,6 +58,8 @@
 						<p>{{ $seller->region }}</p>
 						<strong class="card-title">Район:</strong>
 						<p>{{ $seller->district }}</p>
+						<strong class="card-title">ЄДРПОУ:</strong>
+						<p>{{ $seller->edrpou }}</p>
 						<strong class="card-title">Продукция:</strong>
 						@for ($i=0; $i < count(json_decode($seller->products)); $i++)
 						<p>{{json_decode($seller->products)[$i]}}</p>               

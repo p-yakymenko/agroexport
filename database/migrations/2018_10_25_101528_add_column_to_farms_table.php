@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnToFarmsTableAndDeleteFarmsToProductCategories extends Migration
+class AddColumnToFarmsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class AddColumnToFarmsTableAndDeleteFarmsToProductCategories extends Migration
      */
     public function up()
     {
-        if (!Schema::hasColumn('farms', 'products')) {
-            Schema::table('farms', function (Blueprint $table) {
-                $table->text('products')->nullable();
+        Schema::table('farms', function (Blueprint $table) {
+                $table->string('edrpou');
             });
-        }                
     }
 
     /**
@@ -27,6 +25,6 @@ class AddColumnToFarmsTableAndDeleteFarmsToProductCategories extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('farms_to_product_categories');
+        //
     }
 }
